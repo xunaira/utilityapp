@@ -18,3 +18,20 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::group(['prefix' => 'users'], function(){
+	Route::get('/', 'UsersController@index');
+     
+    Route::get('add', 'UsersController@add');
+
+	Route::post('validate', 'UsersController@email_exists');
+
+	Route::post('create', 'UsersController@create');
+
+	Route::get('edit/{id}', 'UsersController@edit');
+
+	Route::post('update', 'UsersController@update');
+
+	Route::get('delete/{id}', 'UsersController@delete');
+
+});

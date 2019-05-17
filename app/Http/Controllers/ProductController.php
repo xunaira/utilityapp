@@ -11,6 +11,18 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function generate_string($strength = 6) {
+        $input = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $input_length = strlen($input);
+    $random_string = '';
+    for($i = 0; $i < $strength; $i++) {
+        $random_character = $input[mt_rand(0, $input_length - 1)];
+        $random_string .= $random_character;
+    }
+ 
+    return $random_string;
+}
+
     public function index()
     {
         //
@@ -38,12 +50,19 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         //
+        // $request->validate([
+        // 'product_id' => 'required|unique:products|regex:/^[\w-]*$/',
+        // ]);
         $data = new Product;
-        $data->fill($request->all());
+        // $data->fill($request->all());
+        $data->product_id = $this->generate_string();
+        $data->product_name = $_POST['product_name'];
+        $data->product_price = $_POST['product_price'];
+
         if ($data->save()) {
-                    return back()->with('success','Product added successfully.');
+                    return redirect("/product")->with('success','Product added successfully.');
         } else {
-                    return back()->with('error','Product Not Added');
+                    return redirect("/product")->with('error','Product Not Added');
         }
 
     }
@@ -86,9 +105,9 @@ class ProductController extends Controller
         $data = Product::find($id);
         $data->fill($request->all());
         if ($data->save()) {
-                    return back()->with('success','Product updated successfully.');
+               return redirect("/product")->with('success','Product updated successfully.');
         } else {
-                    return back()->with('error','Product Not updated');
+                    return redirect("/product")->with('error','Product Not updated');
         }
 
     }

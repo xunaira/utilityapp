@@ -79,6 +79,9 @@
             @if(Session('error'))
                 <div class="alert alert-danger">{{Session('error')}}</div>
             @endif
+            @if($errors->any())
+               <div class="alert alert-danger"> {{ implode('', $errors->all(':message')) }}</div>
+            @endif
             @yield('content')
         </main>
     </div>

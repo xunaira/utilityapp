@@ -10,12 +10,22 @@
                 <div class="card-body">
                     <form method="POST" action="/product/store">
                         @csrf
+                        
+                        {{-- <div class="form-group row">
+                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Product Id') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="name" type="text" class="form-control" name="product_id" value="{{ old('product_id') }}" required autocomplete="name" autofocus>
+
+                               
+                            </div>
+                        </div> --}}
 
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Product Name') }}</label>
 
                             <div class="col-md-6">
-                                <input id="name" type="text" class="form-control" name="product_name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                                <input id="name" type="text" class="form-control" name="product_name" value="{{ old('product_name') }}" required autocomplete="name" autofocus>
 
                                
                             </div>
@@ -26,7 +36,7 @@
 
                             <div class="col-md-6">
                              
-                                <input id="price" type="number" class="form-control" name="product_price" value="{{ old('price') }}" required autocomplete="product_price" autofocus>
+                                <input id="price" type="number" class="form-control" name="product_price" value="{{ old('product_price') }}" required autocomplete="product_price" autofocus>
 
                             </div>
                         </div>

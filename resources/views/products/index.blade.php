@@ -2,9 +2,10 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-9">
             <table class="table table-responsive table-hover  table-striped  ">
                     <tr>
+                        <th>Product Id</th>
                         <th>Product Name</th>
                         <th>Product Price</th>
                         <th>Product Created</th>
@@ -14,6 +15,7 @@
                     </tr>
                     @foreach($product as $product)
                     <tr>
+                        <td>{{$product->product_id}}</td>
                         <td>{{$product->product_name}}</td>
                         <td>{{$product->product_price}}</td>
                         <td>{{$product->created_at}}</td>

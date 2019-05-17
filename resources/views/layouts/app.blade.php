@@ -76,6 +76,9 @@
             @if(Session('success'))
                 <div class="alert alert-success">{{Session('success')}}</div>
             @endif
+            @if(Session('error'))
+                <div class="alert alert-danger">{{Session('error')}}</div>
+            @endif
             @yield('content')
         </main>
     </div>

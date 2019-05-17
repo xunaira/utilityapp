@@ -86,9 +86,9 @@ class ProductController extends Controller
         $data = Product::find($id);
         $data->fill($request->all());
         if ($data->save()) {
-                    return back()->with('success','Product added successfully.');
+                    return back()->with('success','Product updated successfully.');
         } else {
-                    return back()->with('error','Product Not Added');
+                    return back()->with('error','Product Not updated');
         }
 
     }

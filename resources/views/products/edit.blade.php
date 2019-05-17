@@ -11,7 +11,7 @@
                     <form method="POST" action="/product/update/{{$product->id}}">
                         @csrf
                         
-                        {{-- <div class="form-group row">
+                        <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Product Id') }}</label>
 
                             <div class="col-md-6">
@@ -19,7 +19,7 @@
 
                                
                             </div>
-                        </div> --}}
+                        </div>
 
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Product Name') }}</label>

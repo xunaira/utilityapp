@@ -49,21 +49,16 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        
-        $request->validate([
-        'product_id' => 'required|unique:products',
-        ]);
         $data = new Product;
-        // $data->fill($request->all());
-        // $data->product_id = $this->generate_string();
-        $data->product_id = $_POST['product_id'];
         $data->product_name = $_POST['product_name'];
-        $data->product_price = $_POST['product_price'];
+        $data->company_name = $_POST['company_name'];
+        $data->comm_self = $_POST['comm_self'];
+        $data->comm_cmp = $_POST['comm_cmp'];
 
         if ($data->save()) {
-            return redirect("/product")->with('success','Product added successfully.');
+            return redirect("admin/products")->with('success','Product added successfully.');
         } else {
-            return redirect("/product")->with('error','Product Not Added');
+            return redirect("admin/products")->with('error','Product Not Added');
         }
 
     }
@@ -87,8 +82,8 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        //
-        return view('products.edit', ['product'=>Product::find($id)]);
+        $product = Product::find($id);
+        return view('products.edit', ['product'=> $product]);
     }
 
     /**
@@ -106,9 +101,9 @@ class ProductController extends Controller
         $data = Product::find($id);
         $data->fill($request->all());
         if ($data->save()) {
-         return redirect("/product")->with('success','Product updated successfully.');
+         return redirect("admin/products")->with('success','Product updated successfully.');
      } else {
-        return redirect("/product")->with('error','Product Not updated');
+        return redirect("admin/products")->with('error','Product Not updated');
     }
 
 }

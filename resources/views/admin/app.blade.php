@@ -9,7 +9,7 @@
     <meta name="keywords" content="utility">
 
     <!-- Title Page-->
-    <title>Login</title>
+    <title>Dashboard</title>
 
     <!-- Fontfaces CSS-->
     <link href="{{url('admin/css/font-face.css')}}" rel="stylesheet" media="all">
@@ -36,8 +36,24 @@
 
 <body class="animsition">
     <div class="page-wrapper">
-        <div class="page-content--bge5">
+        <!-- HEADER MOBILE-->
+        @include('admin.header')
+        <!-- END HEADER MOBILE-->
+
+        <!-- MENU SIDEBAR-->
+        @include('admin.aside')
+        <!-- END MENU SIDEBAR-->
+
+        <!-- PAGE CONTAINER-->
+        <div class="page-container">
+            <!-- HEADER DESKTOP-->
+            @include('admin.content_header')
+            <!-- HEADER DESKTOP-->
+
+            <!-- MAIN CONTENT-->
             @yield('content')
+            <!-- END MAIN CONTENT-->
+            <!-- END PAGE CONTAINER-->
         </div>
 
     </div>

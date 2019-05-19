@@ -1,12 +1,13 @@
 @extends('admin.app')
+
 @section('content')
 <div class="main-content">
-        <div class="section__content section__content--p30">
-            <div class="container-fluid">
-                <div class="row">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row">
                     <div class="col-md-12">
                         <!-- DATA TABLE -->
-                        <h3 class="title-5 m-b-35">Products Dashboard</h3>
+                        <h3 class="title-5 m-b-35">System Users</h3>
                         <div class="table-data__tool">
                             <div class="table-data__tool-left">
                                 <div class="rs-select2--light rs-select2--sm">
@@ -19,8 +20,8 @@
                                 </div>
                             </div>
                             <div class="table-data__tool-right">
-                                <a href="{{url('admin/products/create')}}"><button class="au-btn au-btn-icon au-btn--green au-btn--small">
-                                    <i class="zmdi zmdi-plus"></i>Add Product</button></a>
+                                <a href="{{url('admin/users/add')}}"><button class="au-btn au-btn-icon au-btn--green au-btn--small">
+                                    <i class="zmdi zmdi-plus"></i>Add User</button></a>
                                     
                             </div>
                         </div>
@@ -34,16 +35,17 @@
                                                 <span class="au-checkmark"></span>
                                             </label>
                                         </th>
-                                        <th>Product Name</th>
-                                        <th>Merchant Name</th>
-                                        <th>Commission - Dealer</th>
-                                        <th>Commission - Merchant</th>
-                                        <th>Created On</th>
+                                        <th>Name</th>
+                                        <th>Username</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Created At</th>
+                                        <th>Last Updated</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($product as $p)
+                                    @foreach($agents as $p)
                                         <tr class="tr-shadow">
                                             <td>
                                                 <label class="au-checkbox">
@@ -51,22 +53,30 @@
                                                     <span class="au-checkmark"></span>
                                                 </label>
                                             </td>
-                                            <td>{{$p->product_name}}</td>
-                                            <td>{{$p->company_name}}</td>
+                                            <td>{{$p->name}}</td>
+                                            <td>{{$p->username}}</td>
+                                            <td>{{$p->email}}</td>
+                                            @if($p->role_id == 1)
                                             <td>
-                                                {{$p->comm_self}}
+                                                Admin
                                             </td>
-                                            <td class="desc">{{$p->comm_cmp}}</td>
+                                            @else
+                                            <td>
+                                                Supervisor
+                                            </td>
+                                            @endif
                                             <?php 
                                                 $createdAt = Carbon\Carbon::parse($p->created_at)->format('M d Y');
+                                                $updatedAt = Carbon\Carbon::parse($p->updated_at)->format('M d Y');
                                             ?>
-                                            <td>{{$createdAt}}</td>                                            
+                                            <td>{{$createdAt}}</td>     
+                                            <td>{{$updatedAt}}</td>                                            
                                             <td>
                                                 <div class="table-data-feature">
-                                                    <a href="../admin/products/edit/{{$p->id}}" class="pr-4"><button class="item" data-toggle="tooltip" data-placement="top" title="Edit">
+                                                    <a href="../admin/users/edit/{{$p->id}}" class="pr-4"><button class="item" title="Edit">
                                                         <i class="zmdi zmdi-edit"></i>
                                                     </button>
-                                                    <a href="../admin/products/delete/{{$p->id}}"><button class="item" data-toggle="tooltip" data-placement="top" title="Delete">
+                                                    <a href="../admin/users/delete/{{$p->id}}"><button class="item" title="Delete">
                                                         <i class="zmdi zmdi-delete"></i>
                                                     </button>
                                                 </div>
@@ -80,7 +90,9 @@
                         <!-- END DATA TABLE -->
                     </div>
                 </div>
-            </div>
         </div>
     </div>
+</div>
+
+
 @endsection

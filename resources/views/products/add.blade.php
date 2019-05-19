@@ -1,53 +1,62 @@
-@extends('layouts.app')
+@extends('admin.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Add Product') }}</div>
-
-                <div class="card-body">
-                    <form method="POST" action="/product/store">
-                        @csrf
-                        
-                        <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Product Id') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control" name="product_id" value="{{ old('product_id') }}" required autocomplete="name" autofocus>
-
-                               
-                            </div>
+<div class="main-content">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-8 mx-auto d-block">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>Create Product</strong>
                         </div>
-
-                        <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Product Name') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control" name="product_name" value="{{ old('product_name') }}" required autocomplete="name" autofocus>
-
-                               
-                            </div>
+                        <div class="card-body card-block">
+                            <form action="../../admin/products/store" method="post" class="form-horizontal">
+                                @csrf
+                                <div class="row form-group">
+                                    <div class="col col-md-4">
+                                        <label for="text-input" class=" form-control-label">Product Name</label>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <input type="text" id="product_name" name="product_name" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-4">
+                                        <label for="text-input" class=" form-control-label">Company Name</label>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <input type="text" id="company_name" name="company_name" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-4">
+                                        <label for="text-input" class=" form-control-label">Commission - Company</label>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <input type="text" id="comm_company" name="comm_cmp" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-4">
+                                        <label for="text-input" class=" form-control-label">Commission - Self</label>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <input type="text" id="comm_self" name="comm_self" class="form-control">
+                                    </div>
+                                </div>  
+                                                 
                         </div>
-
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('Product Price') }}</label>
-
-                            <div class="col-md-6">
-                             
-                                <input id="price" type="number" class="form-control" name="product_price" value="{{ old('product_price') }}" required autocomplete="product_price" autofocus>
-
-                            </div>
-                        </div>
-						<div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Submit') }}
-                                </button>
-                            </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary btn-sm float-right">
+                                <i class="fa fa-dot-circle-o"></i> Submit
+                            </button>
+                            <button type="reset" class="btn btn-danger btn-sm">
+                                <i class="fa fa-ban"></i> Cancel
+                            </button>
                         </div>
                     </form>
+                    </div>
                 </div>
             </div>
         </div>

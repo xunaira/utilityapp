@@ -8,43 +8,56 @@
                 <div class="col-lg-8 mx-auto d-block">
                     <div class="card">
                         <div class="card-header">
-                            <strong>Create Product</strong>
+                            <strong>Add System User</strong>
                         </div>
                         <div class="card-body card-block">
-                            <form action="../../products/update/{{$product->id}}" method="post" class="form-horizontal">
+                            <form action="../../admin/users/store" method="post" class="form-horizontal">
                                 @csrf
                                 <div class="row form-group">
                                     <div class="col col-md-4">
-                                        <label for="text-input" class=" form-control-label">Product Name</label>
+                                        <label for="text-input" class=" form-control-label">Name</label>
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <input type="text" id="product_name" name="product_name" class="form-control" value="{{$product->product_name}}">
+                                        <input type="text" id="name" name="name" class="form-control">
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <div class="col col-md-4">
-                                        <label for="text-input" class=" form-control-label">Company Name</label>
+                                        <label for="text-input" class=" form-control-label">Username</label>
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <input type="text" id="company_name" name="company_name" class="form-control" value="{{$product->company_name}}">
+                                        <input type="text" id="username" name="username" class="form-control">
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <div class="col col-md-4">
-                                        <label for="text-input" class=" form-control-label">Commission - Company</label>
+                                        <label for="text-input" class=" form-control-label">Password</label>
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <input type="text" id="comm_company" name="comm_cmp" class="form-control" value="{{$product->comm_cmp}}">
+                                        <input type="password" id="password" name="password" class="form-control">
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <div class="col col-md-4">
-                                        <label for="text-input" class=" form-control-label">Commission - Self</label>
+                                        <label for="text-input" class=" form-control-label">Email</label>
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <input type="text" id="comm_self" name="comm_self" class="form-control" value="{{$product->comm_self}}">
+                                        <input type="email" id="email" name="email" class="form-control">
                                     </div>
-                                </div>  
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-4">
+                                        <label for="text-input" class=" form-control-label">Role</label>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <select class="form-control" name="role" id="role">
+                                            <option value="">- SELECT ROLE - </option>
+                                            @foreach($roles as $role)
+                                                <option value="{{$role->id}}" style="text-transform: capitalize;">{{$role->name}}</option>                                                
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>        
                                                  
                         </div>
                         <div class="card-footer">

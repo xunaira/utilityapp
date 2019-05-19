@@ -10,35 +10,62 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::get('/', function () {
-	return view('welcome');
+		return view('auth.login');
+	});
+
+
+Route::group(['prefix' => 'admin'], function(){
+	Auth::routes();
+	Route::get('dashboard', 'HomeController@index');
+	Route::get('logout', 'Auth\LoginController@logout');
+
+	Route::group(['prefix' => 'agents'], function(){
+		Route::get('/', 'UserController@index');
+
+		Route::get('add', 'UserController@create');
+
+		Route::post('validate', 'UserController@email_exists');
+
+		Route::post('store', 'UserController@store');
+
+		Route::get('edit/{id}', 'UserController@edit');
+
+		Route::post('update', 'UserController@update');
+
+		Route::get('delete/{id}', 'UserController@destroy');
+
+	});
+
+	Route::group(['prefix' => 'users'], function(){
+		Route::get('/', 'UsersController@index');
+
+		Route::get('add', 'UsersController@create');
+
+		Route::post('validate', 'UsersController@email_exists');
+
+		Route::post('store', 'UsersController@store');
+
+		Route::get('edit/{id}', 'UsersController@edit');
+
+		Route::post('update', 'UsersController@update');
+
+		Route::get('delete/{id}', 'UsersController@destroy');
+
+	});
+
+	Route::group(['prefix' => 'products'], function(){
+		Route::get('/', 'ProductController@index')->name('products_index');
+
+		Route::get('/create', 'ProductController@create')->name('products_create');
+
+		Route::post('/store', 'ProductController@store')->name('products_store');
+
+		Route::get('edit/{id}', 'ProductController@edit')->name('products_edit');
+
+		Route::post('update/{id}', 'ProductController@update')->name('products_update');
+
+		Route::get('delete/{id}', 'ProductController@destroy')->name('products_delete');
+
+	});
 });
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
-Route::group(['prefix' => 'users'], function(){
-	Route::get('/', 'UsersController@index');
-
-	Route::get('add', 'UsersController@add');
-
-	Route::post('validate', 'UsersController@email_exists');
-
-	Route::post('create', 'UsersController@create');
-
-	Route::get('edit/{id}', 'UsersController@edit');
-
-	Route::post('update', 'UsersController@update');
-
-	Route::get('delete/{id}', 'UsersController@delete');
-
-});
-//Product
-Route::get('product', 'ProductController@index')->name('products_index');
-Route::get('product/create', 'ProductController@create')->name('products_create');
-Route::post('/product/store', 'ProductController@store')->name('products_store');
-Route::get('product/edit/{id}', 'ProductController@edit')->name('products_edit');
-Route::post('product/update/{id}', 'ProductController@update')->name('products_update');
-Route::get('product/delete/{id}', 'ProductController@destroy')->name('products_delete');

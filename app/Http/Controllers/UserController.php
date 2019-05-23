@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\agents_migration;
 use Illuminate\Http\Request;
+use App\Wallet;
+use Auth;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -127,6 +130,26 @@ class UserController extends Controller
             return back()->with('success','Agent Deleted successfully.');
         } else {
             return back()->with('error','Agent Not Deleted');
+        }
+
+    }
+
+    public function add_balance(){
+        return view('users.add-balance');
+    }
+
+    public function balance(Request $r){
+        $wallet = new Wallet();
+        $wallet->total_funds = $r->get('fundings');
+        $wallet->user_id = Auth::user()->id;
+        $wallet->date = Carbon::now();
+
+        $save = $wallet->save();
+
+        if($save){
+            return back()->with('success','Funds Added successfully.');
+        }else{
+            return back()->with('error','Funds not added.');
         }
 
     }

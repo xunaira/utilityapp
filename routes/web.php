@@ -25,6 +25,10 @@ Route::group(['prefix' => 'admin'], function(){
 
 		Route::get('add', 'UserController@create');
 
+		Route::get('add-balance', 'UserController@add_balance');
+
+		Route::post('add-balance', 'UserController@balance');
+
 		Route::post('validate', 'UserController@email_exists');
 
 		Route::post('store', 'UserController@store');

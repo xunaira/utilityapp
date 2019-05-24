@@ -77,7 +77,6 @@
                                     <i class="fas fa-users"></i>Users</a>
                             </li>
                         @endif
-
                     </ul>
                 </nav>
             </div>

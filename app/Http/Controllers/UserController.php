@@ -8,6 +8,8 @@ use App\User;
 use App\Wallet;
 use Auth;
 use Carbon\Carbon;
+use DB;
+use Hash;
 
 class UserController extends Controller
 {
@@ -18,7 +20,12 @@ class UserController extends Controller
      */
     public function index()
     {
-        $agents = agents_migration::all();
+        //$agents = agents_migration::all();
+        $agents = DB::table('users')
+            ->join('agents', 'users.agent_id', '=', 'agents.id')
+            ->select('users.name', 'users.username', 'users.email','agents.*')
+            ->get();
+        dd($agents);
         return view('users.content', ['agents' => $agents]);
     }
 
@@ -42,29 +49,34 @@ class UserController extends Controller
     {
         $data = new agents_migration;
         $user = new User;
-        $user->name = $_POST['name'];
-        $user->username = $_POST['username'];
-        $user->password = $_POST['password'];
-        $user->email = $_POST['email'];
-        if($user->save()){
-            $id = User::where('email', $request->get('email'))->select('id')->get();
+        
+        $data->email = $request->get('email');
+        $data->address1 = $request->get('address1');
+        $data->address2 = $request->get('address2');
+        $data->city = $request->get('city');
+        $data->state = $request->get('state');
+        $data->country = $request->get('country');
+        $data->phone_no = $request->get('phone_no');
+        $data->operational_area = $request->get('operational_area');
+        $data->agent_type = $request->get('type');
+       
+       if($data->save()){
+            $id = agents_migration::where('email', $request->get('email'))->select('id')->get();
             foreach($id as $i)
-                $role_id = $i->id;
-            $data->agent_id = $role_id;
-            $data->address1 = $_POST['address1'];
-            $data->address2 = $_POST['address2'];
-            $data->city = $_POST['city'];
-            $data->state = $_POST['state'];
-            $data->country = $_POST['country'];
-            $data->phone_no = $_POST['phone_no'];
-            $data->operational_area = $_POST['operational_area'];
-            $data->agent_type = $_POST['type'];
-        }
+                // $data->agent_id = $role_id;
+                $user->name = $request->get('name');
+                $user->username = $request->get('username');
+                $user->password = Hash::make($request->get('password'));
+                $user->email = $request->get('email');
+                $user->role_id = 3;
+                $user->agent_id = $i->id;
+                
 
-        if ($data->save()) {
-            return redirect("admin/agents")->with('success','Product added successfully.');
-        } else {
-            return redirect("admin/agents")->with('error','Product Not Added');
+            if ($data->save()) {
+                return redirect("admin/agents")->with('success','Product added successfully.');
+            } else {
+                return redirect("admin/agents")->with('error','Product Not Added');
+            }
         }
     }
 

@@ -11,16 +11,16 @@
                             <strong>Create Product</strong>
                         </div>
                         <div class="card-body card-block">
-                            <form action="../../admin/products/store" method="post" class="form-horizontal">
+                            <form action="{{route('store')}}" method="post" class="form-horizontal">
                                 @csrf
                                 <div class="row form-group">
                                     <div class="col col-md-4">
                                         <label for="text-input" class=" form-control-label">Product</label>
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <select name="product" id="text-input">
+                                        <select id="product_id" name="product_id" id="text-input">
                                         @foreach($products as $p)
-                                            <option value="{{$p->id}}">{{$p->product_name}}</option>
+                                            <option id="product_idd" value="{{$p->id}}">{{$p->product_name}}</option>
                                         @endforeach
                                         </select>
                                     </div>
@@ -30,7 +30,7 @@
                                         <label for="text-input" class=" form-control-label">Value of Sales</label>
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <input type="number" id="" name="company_name" class="form-control">
+                                        <input type="number" id="sales_values2" name="sale_value" required class="form-control">
                                     </div>
                                 </div>
                                 <div class="row form-group">
@@ -38,18 +38,18 @@
                                         <label for="text-input" class=" form-control-label">Date</label>
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <input type="date" id="comm_company" name="comm_cmp" class="form-control">
+                                        <input type="text" readonly id="comm_company" name="date" value="{{date('Y/m/d')}}" class="form-control">
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <div class="col col-md-4">
-                                        <label for="text-input" class=" form-control-label">Current Balance</label>
+                                        <label for="text-input" class=" form-control-label">Comission</label>
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <input type="text" id="comm_self" name="comm_self" class="form-control">
+                                        <input type="text" readonly id="comission" name="com_price" class="form-control">
                                     </div>
                                 </div> 
-
+<!-- 
                                  <div class="row form-group">
                                     <div class="col col-md-4">
                                         <label for="text-input" class=" form-control-label">Comission</label>
@@ -57,7 +57,7 @@
                                     <div class="col-12 col-md-6">
                                         <input type="number" id="comm_self" name="comm_self" class="form-control">
                                     </div>
-                                </div>  
+                                </div>   -->
                                                  
                         </div>
                         <div class="card-footer">
@@ -75,4 +75,32 @@
         </div>
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script type="text/javascript">
+
+
+  $("#product_id").change(function () {
+        var product_id = $(this).val();
+       
+        var sales_token = '{{csrf_token()}}';
+        $.ajax({
+            url:'{{route("get_product")}}',
+            method:"Post",
+            data:{product_id:product_id,_token:sales_token},
+            datatype:"text",
+            success:function(data) {
+                console.log(data);
+                   $('#comission').val(data.comission);
+            }
+        });
+    });
+   $("#sales_values2").change(function () {
+    console.log("working")
+     var sales_values2 = $(this).val();
+     var com_self = $('#comission').val();
+     var result=sales_values2*com_self;
+     $('#comission').val(result);
+
+    });
+</script>
 @endsection

@@ -74,11 +74,11 @@ Route::group(['prefix' => 'admin'], function(){
 	});
 
 	Route::group(['prefix' => 'agent-sales'], function(){
-		Route::get('/', 'AgentSalesController@index');
+		Route::get('/', 'AgentSalesController@index')->name('agent_index');
 
 		Route::get('add', 'AgentSalesController@create');
 
-		Route::post('store', 'AgentSalesController@store');
+		Route::post('store', 'AgentSalesController@store')->name('store');;
 
 		Route::get('edit/{id}', 'AgentSalesController@edit');
 
@@ -86,6 +86,7 @@ Route::group(['prefix' => 'admin'], function(){
 
 		Route::get('delete/{id}', 'AgentSalesController@destroy');
 
+		Route::post('ajax', 'AgentSalesController@productGet')->name('get_product');
 	});
 
 

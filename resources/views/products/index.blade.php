@@ -36,8 +36,8 @@
                                         </th>
                                         <th>Product Name</th>
                                         <th>Merchant Name</th>
-                                        <th>Commission - Dealer</th>
-                                        <th>Commission - Merchant</th>
+                                        <th>Commission - Dealer (%)</th>
+                                        <th>Commission - Merchant (%)</th>
                                         <th>Created On</th>
                                         <th></th>
                                     </tr>

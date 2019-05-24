@@ -113,8 +113,6 @@
                                     <i class="fas fa-users"></i>Agent Sales</a>
                             </li>
                         @endif
-                        
-                        
                     </ul>
                 </nav>
             </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\agents_migration;
 use Illuminate\Http\Request;
+use App\User;
 use App\Wallet;
 use Auth;
 use Carbon\Carbon;
@@ -40,18 +41,25 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $data = new agents_migration;
-        $data->name = $_POST['name'];
-        $data->username = $_POST['username'];
-        $data->password = $_POST['password'];
-        $data->email = $_POST['email'];
-        $data->address1 = $_POST['address1'];
-        $data->address2 = $_POST['address2'];
-        $data->city = $_POST['city'];
-        $data->state = $_POST['state'];
-        $data->country = $_POST['country'];
-        $data->phone_no = $_POST['phone_no'];
-        $data->operational_area = $_POST['operational_area'];
-        $data->agent_type = $_POST['type'];
+        $user = new User;
+        $user->name = $_POST['name'];
+        $user->username = $_POST['username'];
+        $user->password = $_POST['password'];
+        $user->email = $_POST['email'];
+        if($user->save()){
+            $id = User::where('email', $request->get('email'))->select('id')->get();
+            foreach($id as $i)
+                $role_id = $i->id;
+            $data->agent_id = $role_id;
+            $data->address1 = $_POST['address1'];
+            $data->address2 = $_POST['address2'];
+            $data->city = $_POST['city'];
+            $data->state = $_POST['state'];
+            $data->country = $_POST['country'];
+            $data->phone_no = $_POST['phone_no'];
+            $data->operational_area = $_POST['operational_area'];
+            $data->agent_type = $_POST['type'];
+        }
 
         if ($data->save()) {
             return redirect("admin/agents")->with('success','Product added successfully.');

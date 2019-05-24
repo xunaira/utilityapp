@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Product;
+use App\AgentSales;
 use Illuminate\Http\Request;
 use Auth;
 use App\AgentSales;
@@ -42,6 +43,7 @@ class AgentSalesController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
+<<<<<<< HEAD
             'product' => 'required',
             'value' => 'required',
             'date' => 'required'
@@ -66,6 +68,35 @@ class AgentSalesController extends Controller
         }
 
         
+=======
+        'product_id' => 'required|max:255',
+        'sale_value' => 'required|numeric',
+        'date' => 'required',
+        ]);
+        if($validatedData) {
+        $data =new AgentSales;
+        $data->fill($request->all());
+        if ($data->save()) {
+         return back()->with('success','Product updated successfully.');
+     } else {
+        return back()->with('error','Product Not updated');
+    }
+}
+    }
+
+     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function productGet(Request $request)
+    {
+        $id=$request->product_id;
+        $getProduct=Product::where('id', $id)->first();
+       
+        return response()->json(['comission'=>$getProduct->comm_self]);
+>>>>>>> 624c5ead9e377edd745c776b530fdab7eb7382a6
     }
 
     /**

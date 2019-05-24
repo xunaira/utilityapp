@@ -11,17 +11,16 @@
                             <strong>Add Sale</strong>
                         </div>
                         <div class="card-body card-block">
-                            <form action="../../admin/agent-sales/store" method="post" class="form-horizontal">
+                         <form action="../../admin/agent-sales/store" method="post" class="form-horizontal">
                                 @csrf
                                 <div class="row form-group">
                                     <div class="col col-md-4">
                                         <label for="text-input" class=" form-control-label">Product</label>
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <select name="product" class="form-control @error('product') is-invalid @enderror" id="text-input">
-                                            <option value="">-- SELECT PRODUCT --</option>
+                                        <select id="product_id" name="product_id" id="text-input">
                                         @foreach($products as $p)
-                                            <option value="{{$p->id}}">{{$p->product_name}}</option>
+                                            <option id="product_idd" value="{{$p->id}}">{{$p->product_name}}</option>
                                         @endforeach
                                         @error('product')
                                             <div class="alert alert-danger">{{ $message }}</div>
@@ -34,10 +33,8 @@
                                         <label for="text-input" class=" form-control-label">Value of Sales</label>
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <input type="number" id="sales_value" name="value" class="form-control @error('value') is-invalid @enderror">
-                                        @error('value')
-                                            <div class="alert alert-danger">{{ $message }}</div>
-                                        @enderror
+
+                                        <input type="number" id="sales_values2" name="sale_value" required class="form-control">
                                     </div>
                                 </div>
                                 <div class="row form-group">
@@ -85,4 +82,32 @@
         </div>
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script type="text/javascript">
+
+
+  $("#product_id").change(function () {
+        var product_id = $(this).val();
+       
+        var sales_token = '{{csrf_token()}}';
+        $.ajax({
+            url:'{{route("get_product")}}',
+            method:"Post",
+            data:{product_id:product_id,_token:sales_token},
+            datatype:"text",
+            success:function(data) {
+                console.log(data);
+                   $('#comission').val(data.comission);
+            }
+        });
+    });
+   $("#sales_values2").change(function () {
+    console.log("working")
+     var sales_values2 = $(this).val();
+     var com_self = $('#comission').val();
+     var result=sales_values2*com_self;
+     $('#comission').val(result);
+
+    });
+</script>
 @endsection

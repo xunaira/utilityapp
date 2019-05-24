@@ -25,6 +25,8 @@
                                 </a>
                                 <a href="{{url('admin/agents/add-sales')}}"><button class="au-btn au-btn-icon au-btn--blue au-btn--small">
                                     <i class="zmdi zmdi-plus"></i>Add Agent Sales</button>
+                                <a href="{{url('admin/agents/add-balance')}}"><button class="au-btn au-btn-icon au-btn--blue au-btn--small">
+                                    <i class="zmdi zmdi-plus"></i>Add Balance</button>
                                 </a>
                                     
                             </div>

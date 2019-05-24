@@ -25,6 +25,10 @@ Route::group(['prefix' => 'admin'], function(){
 
 		Route::get('add', 'UserController@create');
 
+		Route::get('add-balance', 'UserController@add_balance');
+
+		Route::post('add-balance', 'UserController@balance');
+
 		Route::post('validate', 'UserController@email_exists');
 
 		Route::post('store', 'UserController@store');
@@ -68,4 +72,21 @@ Route::group(['prefix' => 'admin'], function(){
 		Route::get('delete/{id}', 'ProductController@destroy')->name('products_delete');
 
 	});
+
+	Route::group(['prefix' => 'agent-sales'], function(){
+		Route::get('/', 'AgentSalesController@index');
+
+		Route::get('add', 'AgentSalesController@create');
+
+		Route::post('store', 'AgentSalesController@store');
+
+		Route::get('edit/{id}', 'AgentSalesController@edit');
+
+		Route::post('update', 'AgentSalesController@update');
+
+		Route::get('delete/{id}', 'AgentSalesController@destroy');
+
+	});
+
+
 });

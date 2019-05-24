@@ -18,7 +18,7 @@
                                     <div class="overview__inner">
                                         <div class="overview-box clearfix">
                                             <div class="icon">
-                                                <i class="zmdi zmdi-account-o"></i>
+                                                <i class="zmdi zmdi-money"></i>
                                             </div>
                                             <div class="text">
                                                 <h2>10368</h2>

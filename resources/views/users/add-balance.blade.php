@@ -26,8 +26,27 @@
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <input type="number" id="fundings" name="fundings" class="form-control">
+                                        <input type="number" id="id" name="id" class="form-control d-none" value="{{Auth::user()->id}}">
                                     </div>
                                 </div>
+                                @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
+                                    <div class="row form-group">
+                                        <div class="col col-md-4">
+                                            <label for="text-input" class=" form-control-label">Agent Name</label>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <select name="agent" class="form-control @error('product') is-invalid @enderror" id="text-input">
+                                                <option value="">-- SELECT AGENT --</option>
+                                            @foreach($agents as $a)
+                                                <option value="{{$a->id}}">{{$a->name}}</option>
+                                            @endforeach
+                                            @error('product')
+                                                <div class="alert alert-danger">{{ $message }}</div>
+                                            @enderror
+                                            </select>
+                                        </div>
+                                    </div>
+                                @endif 
                         </div>
                         <div class="card-footer">
                             <button type="submit" class="btn btn-primary btn-sm float-right">

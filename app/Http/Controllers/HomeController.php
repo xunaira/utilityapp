@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Settings;
 
 class HomeController extends Controller
 {
@@ -23,6 +24,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('dashboard.content');
+        $comm = Settings::where('type', "self funded agents")->get();
+        return view('dashboard.content', ['comm' => $comm]);
     }
 }

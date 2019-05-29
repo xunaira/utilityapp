@@ -19,8 +19,16 @@
                                 </div>
                             </div>
                             <div class="table-data__tool-right">
-                                <a href="{{url('admin/agent-sales/add')}}"><button class="au-btn au-btn-icon au-btn--green au-btn--small">
-                                    <i class="zmdi zmdi-plus"></i>Add Sale</button></a>
+                                <a href="{{url('admin/agent-sales/add')}}">
+                                    <button class="au-btn au-btn-icon au-btn--green au-btn--small">
+                                        <i class="zmdi zmdi-plus"></i>Add Sale
+                                    </button>
+                                </a>
+                                <a href="{{url('admin/agents/add-balance')}}">
+                                    <button class="au-btn au-btn-icon au-btn--blue au-btn--small">
+                                        <i class="zmdi zmdi-plus"></i>Add Balance
+                                    </button>
+                                </a>
                                     
                             </div>
                         </div>
@@ -28,17 +36,11 @@
                             <table class="table table-data2">
                                 <thead>
                                     <tr>
-                                        <th>
-                                            <label class="au-checkbox">
-                                                <input type="checkbox">
-                                                <span class="au-checkmark"></span>
-                                            </label>
-                                        </th>
+                                        <th>Agent Name</th>
                                         <th>Product Name</th>
                                         <th>Sales Value</th>
-                                        <th>Commission</th>
                                         <th>Date</th>
-                                        <th>Created On</th>
+                                        <th>Status</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -46,33 +48,48 @@
                                     @foreach($sales as $p)
                                         <tr class="tr-shadow">
                                             <td>
-                                                <label class="au-checkbox">
-                                                    <input type="checkbox">
-                                                    <span class="au-checkmark"></span>
-                                                </label>
+                                                {{$p->name}}
                                             </td>
-                                            <td>{{$p->product_id}}</td>
-                                            <td>{{$p->value}}</td>
-                                            <td>
-                                                {{$p->commmission}}
-                                            </td>
+                                            <td>{{$p->product_name}}</td>
+                                            <td>&#8358; {{$p->sale_value}}</td>
                                             <?php 
                                                 $date = Carbon\Carbon::parse($p->date);
                                                 $d = $date->format('M d Y')
                                             ?>
                                             <td class="desc">{{$d}}</td>
-                                            <?php 
-                                                $createdAt = Carbon\Carbon::parse($p->created_at)->format('M d Y');
-                                            ?>
-                                            <td>{{$createdAt}}</td>                                            
+                                            <td>{{$p->status}}</td>                                            
                                             <td>
                                                 <div class="table-data-feature">
+                                                    @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
+                                                        <a href="#" class="pr-4">
+                                                            <button class="item" data-toggle="modal" data-target="#detailModal" data-id="{{$p->id}}">
+                                                                <i class="fa fa-eye"></i>
+                                                            </button>
+                                                        </a>
+                                                        @if($p->status == "Approved")
+                                                            <a href="" class="pr-4">
+                                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Approve" style="background-color: #28a745 !important">
+                                                                    <i class="fa fa-check" style="color: #fff;"></i>
+                                                                </button>
+                                                            </a>
+                                                        @else
+                                                             <a href="" class="pr-4">
+                                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Approve">
+                                                                    <i class="fa fa-check"></i>
+                                                                </button>
+                                                            </a>
+
+                                                        @endif
+                                                    @endif
                                                     <a href="../admin/agent-sales/edit/{{$p->id}}" class="pr-4"><button class="item" data-toggle="tooltip" data-placement="top" title="Edit">
                                                         <i class="zmdi zmdi-edit"></i>
-                                                    </button>
-                                                    <a href="../admin/agent-sales/delete/{{$p->id}}"><button class="item" data-toggle="tooltip" data-placement="top" title="Delete">
+                                                        </button>
+                                                    </a>
+                                                    <a href="../admin/agent-sales/delete/{{$p->id}}">
+                                                        <button class="item" data-toggle="tooltip" data-placement="top" title="Delete">
                                                         <i class="zmdi zmdi-delete"></i>
-                                                    </button>
+                                                        </button>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -87,4 +104,24 @@
             </div>
         </div>
     </div>
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mediumModalLabel">Agent Sales Detail</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

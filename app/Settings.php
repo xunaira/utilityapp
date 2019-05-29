@@ -4,10 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AgentSales extends Model
+class Settings extends Model
 {
     protected $guarded = [];
-    protected $table = 'add_sales';
+    protected $table = 'commission';
     public $timestamps = false;
-
 }

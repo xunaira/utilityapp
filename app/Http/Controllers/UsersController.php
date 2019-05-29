@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\User;
 use Illuminate\Support\Facades\Hash;
+use App\agents_migration;
+use DB;
 
 class UsersController extends Controller
 {
@@ -39,6 +41,7 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
+        $e = $request->get('email');
         $data = new User;
         $data->name = $_POST['name'];
         $data->username = $_POST['username'];
@@ -47,6 +50,12 @@ class UsersController extends Controller
         $data->role_id = $request->get('role');
 
         if ($data->save()) {
+            if($data->role_id == 2){
+                $email = User::where('email', $e)->get();
+                foreach($email as $e){
+                    $sup = DB::table('supervisor')->insert(['user_id' => $e->id, 'name' => $e->name]);
+                }
+            }
             return redirect("admin/users")->with('success','User added successfully.');
         } else {
             return redirect("admin/users")->with('error','User Not Added');
@@ -72,9 +81,10 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
-        $agents = agents_migration::find($id);
-
-        return view('users.edit', ['agents' => $agents]);
+        $agents = User::find($id);
+        $roles = DB::table('roles')->get();
+       
+        return view('users.edit', ['agents' => $agents, 'roles' => $roles]);
     }
 
     /**

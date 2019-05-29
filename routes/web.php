@@ -74,7 +74,7 @@ Route::group(['prefix' => 'admin'], function(){
 	});
 
 	Route::group(['prefix' => 'agent-sales'], function(){
-		Route::get('/', 'AgentSalesController@index')->name('agent_index');
+		Route::get('/', 'AgentSalesController@index');
 
 		Route::get('add', 'AgentSalesController@create');
 
@@ -87,6 +87,34 @@ Route::group(['prefix' => 'admin'], function(){
 		Route::get('delete/{id}', 'AgentSalesController@destroy');
 
 		Route::post('ajax', 'AgentSalesController@productGet')->name('get_product');
+
+		Route::get('balance', 'AgentSalesController@getTotalBalance');
+	});
+
+	Route::group(['prefix' => 'settings'], function(){
+		Route::get('/', 'SettingsController@index');
+
+		Route::get('commission', 'SettingsController@commission');
+
+		Route::post('commission', 'SettingsController@store');
+
+		Route::get('edit/{id}', 'SettingsController@edit');
+
+		Route::post('update', 'SettingsController@update');
+
+		Route::get('delete/{id}', 'SettingsController@destroy');
+
+		Route::get('system', 'SettingsController@system');
+
+		Route::get('balance', 'SettingsController@view_balance');
+
+		Route::get('edit_balance/{id}', 'SettingsController@edit_balance');
+
+		Route::post('update_balance', 'SettingsController@update_balance');
+
+		Route::get('delete_balance/{id}', 'SettingsController@delete_balance');
+
+		Route::post('system', 'SettingsController@add_balance');
 	});
 
 

@@ -81,6 +81,7 @@
 
     <!-- Main JS-->
     <script src="{{url('admin/js/main.js')}}"></script>
+    <script src="{{url('js/modal.js')}}"></script>
 
 </body>
 

@@ -21,11 +21,10 @@ class UserController extends Controller
     public function index()
     {
         //$agents = agents_migration::all();
-        $agents = DB::table('users')
-            ->join('agents', 'users.agent_id', '=', 'agents.id')
-            ->select('users.name', 'users.username', 'users.email','agents.*')
+        $agents = DB::table('agents')
+            ->join('users', 'agents.id', '=', 'users.agent_id')
+            ->select('users.*','agents.*')
             ->get();
-        dd($agents);
         return view('users.content', ['agents' => $agents]);
     }
 
@@ -36,7 +35,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.add');
+        $sup = User::where('role_id', 2)->get();
+        return view('users.add', ['sup' => $sup]);
     }
 
     /**
@@ -59,6 +59,9 @@ class UserController extends Controller
         $data->phone_no = $request->get('phone_no');
         $data->operational_area = $request->get('operational_area');
         $data->agent_type = $request->get('type');
+        $data->supervisor_id = $request->get('sup');
+        $data->commission = $request->get('commission');
+        $data->salary = $request->get('salary');
        
        if($data->save()){
             $id = agents_migration::where('email', $request->get('email'))->select('id')->get();
@@ -72,7 +75,7 @@ class UserController extends Controller
                 $user->agent_id = $i->id;
                 
 
-            if ($data->save()) {
+            if ($user->save()) {
                 return redirect("admin/agents")->with('success','Product added successfully.');
             } else {
                 return redirect("admin/agents")->with('error','Product Not Added');
@@ -155,16 +158,30 @@ class UserController extends Controller
     }
 
     public function add_balance(){
-        return view('users.add-balance');
+        $agents = DB::table('users')
+            ->join('agents', 'users.agent_id', '=', 'agents.id')
+            ->select('users.name', 'agents.id')
+            ->get();
+        return view('users.add-balance', ['agents' => $agents]);
     }
 
     public function balance(Request $r){
         $wallet = new Wallet();
         $wallet->total_funds = $r->get('fundings');
-        $wallet->user_id = Auth::user()->id;
+        
+        if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2){
+            $user_id = $r->get('agent');
+        }
+        else if(Auth::user()->role_id == 3){
+            $user_id = Auth::user()->id;
+        }
+
+
+        $wallet->user_id = $user_id;
+
         $wallet->date = Carbon::now();
 
-        $save = $wallet->save();
+       $save = $wallet->save();
 
         if($save){
             return back()->with('success','Funds Added successfully.');

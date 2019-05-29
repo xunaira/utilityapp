@@ -103,6 +103,22 @@
                                 </div> 
                                 <div class="row form-group">
                                     <div class="col col-md-4">
+                                        <label for="text-input" class=" form-control-label">Agent Commission (%)</label>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <input type="text" id="commission" name="commission" class="form-control">
+                                    </div>
+                                </div>
+                                  <div class="row form-group">
+                                    <div class="col col-md-4">
+                                        <label for="text-input" class=" form-control-label">Agent Salary (if applies)</label>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <input type="text" id="salary" name="salary" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-4">
                                         <label for="text-input" class=" form-control-label">Agent Type</label>
                                     </div>
                                     <div class="col-12 col-md-6">
@@ -112,7 +128,20 @@
                                             <option value="funded agents">Funded Agents</option>
                                         </select>
                                     </div>
-                                </div>        
+                                </div>  
+                                <div class="row form-group">
+                                    <div class="col col-md-4">
+                                        <label for="text-input" class=" form-control-label">Supervisor</label>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <select class="form-control" name="sup" id="sup" required>
+                                            <option value="">- SELECT SUPERVISOR - </option>
+                                            @foreach($sup as $s)
+                                                <option value="{{$s->id}}">{{$s->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>       
                                                  
                         </div>
                         <div class="card-footer">

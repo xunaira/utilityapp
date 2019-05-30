@@ -224,6 +224,10 @@
                             </a>
                         </li>
                         <li>
+                            <a href="{{url('admin/agents')}}">
+                                <i class="fas fa-users"></i>Agents</a>
+                        </li>
+                        <li>
                             <a href="{{url('admin/agent-sales')}}">
                                 <i class="fas fa-users"></i>Agent Sales</a>
                         </li>
@@ -249,11 +253,8 @@
                                 <li>
                                     <a href="{{url('admin/agents')}}">
                                         <i class="fas fa-users"></i>Agents</a>
-                                </li>
-                                <li>
-                                    <a href="{{url('admin/users')}}">
-                                        <i class="fas fa-users"></i>Users</a>
-                                </li>
+                                </li>                                
+
                                 <li>
                                     <a href="{{url('admin/agent-sales')}}">
                                         <i class="fas fa-users"></i>Agent Sales</a>
@@ -282,10 +283,6 @@
                                         <i class="fas fa-users"></i>Agents</a>
                                 </li>
                                 <li>
-                                    <a href="{{url('admin/users')}}">
-                                        <i class="fas fa-users"></i>Users</a>
-                                </li>
-                                <li>
                                     <a href="{{url('admin/agent-sales')}}">
                                         <i class="fas fa-users"></i>Agent Sales</a>
                                 </li>
@@ -311,10 +308,6 @@
                                 <li>
                                     <a href="{{url('admin/agents')}}">
                                         <i class="fas fa-users"></i>Agents</a>
-                                </li>
-                                <li>
-                                    <a href="{{url('admin/users')}}">
-                                        <i class="fas fa-users"></i>Users</a>
                                 </li>
                                 <li class="active">
                                     <a href="{{url('admin/agent-sales')}}">
@@ -343,10 +336,6 @@
                                     <a href="{{url('admin/agents')}}">
                                         <i class="fas fa-users"></i>Agents</a>
                                 </li>
-                                <li>
-                                    <a href="{{url('admin/users')}}">
-                                        <i class="fas fa-users"></i>Users</a>
-                                </li>
                                 <li class="active">
                                     <a href="{{url('admin/agent-sales')}}">
                                         <i class="fas fa-users"></i>Agent Sales</a>
@@ -372,10 +361,6 @@
                                 <li>
                                     <a href="{{url('admin/agents')}}">
                                         <i class="fas fa-users"></i>Agents</a>
-                                </li>
-                                <li>
-                                    <a href="{{url('admin/users')}}">
-                                        <i class="fas fa-users"></i>Users</a>
                                 </li>
                                 <li>
                                     <a href="{{url('admin/agent-sales')}}">

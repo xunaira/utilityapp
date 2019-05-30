@@ -31,10 +31,18 @@
                                 </div>
                                 <div class="row form-group">
                                     <div class="col col-md-4">
-                                        <label for="text-input" class=" form-control-label">Commission - Company</label>
+                                        <label for="text-input" class=" form-control-label">Commission - Funded Agent</label>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <input type="text" id="comm_company" name="comm_cmp" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-4">
+                                        <label for="text-input" class=" form-control-label">Commission - Self Funded Agent</label>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <input type="text" id="comm_funded" name="comm_funded" class="form-control">
                                     </div>
                                 </div>
                                 <div class="row form-group">

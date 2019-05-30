@@ -56,6 +56,8 @@ Route::group(['prefix' => 'admin'], function(){
 
 		Route::get('delete/{id}', 'UsersController@destroy');
 
+		Route::get('agents/{id}', 'UsersController@agents');
+
 	});
 
 	Route::group(['prefix' => 'products'], function(){

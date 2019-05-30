@@ -18,8 +18,19 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $agents = User::all();
-        return view('roles.content', ['agents' => $agents]);
+        $agents = User::where('role_id', 1)->get();
+        $sup = User::where('role_id', 2)->get();
+        return view('roles.content', ['agents' => $agents, 'sup' => $sup]);
+    }
+
+    public function agents($id){
+        $agents = DB::table('agents')
+                ->join('users', 'users.agent_id', '=', 'agents.id')
+                ->join('supervisor', 'supervisor.user_id' , '=' , 'agents.supervisor_id')
+                ->where('supervisor.user_id', $id)
+                ->select('agents.*', 'supervisor.name as sup', 'users.name')
+                ->get();
+        return view('roles.agents', ['agents' => $agents]);
     }
 
     /**

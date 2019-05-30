@@ -20,11 +20,21 @@ class UserController extends Controller
      */
     public function index()
     {
-        //$agents = agents_migration::all();
-        $agents = DB::table('agents')
+        if(Auth::user()->role_id == 1){
+            $agents = DB::table('agents')
+            ->join('supervisor', 'supervisor.user_id', '=', 'agents.supervisor_id')
             ->join('users', 'agents.id', '=', 'users.agent_id')
-            ->select('users.*','agents.*')
+            ->select('users.*','agents.*', 'supervisor.name as sup')
             ->get();
+        }else{
+            $agents = DB::table('agents')
+            ->join('supervisor', 'supervisor.user_id', '=', 'agents.supervisor_id')
+            ->join('users', 'agents.id', '=', 'users.agent_id')
+            ->select('users.*','agents.*', 'supervisor.name as sup')
+            ->where('supervisor_id', Auth::user()->id)
+            ->get();
+        }
+        
         return view('users.content', ['agents' => $agents]);
     }
 

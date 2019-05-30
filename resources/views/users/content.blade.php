@@ -67,8 +67,8 @@
                                             <td>{{$createdAt}}</td>                                            
                                             <td>
                                                 <div class="table-data-feature">
-                                                    <a href="#" class="pr-4">
-                                                        <button class="item" data-toggle="modal" data-target="#detailModal" data-id="{{$p->id}}">
+                                                    <a href="../admin/agents/detail/{{$p->id}}" class="pr-4">
+                                                        <button class="item" title="Agent Detail">
                                                             <i class="fa fa-eye"></i>
                                                         </button>
                                                     </a>
@@ -92,6 +92,4 @@
         </div>
     </div>
 </div>
-
-
 @endsection

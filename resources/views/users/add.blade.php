@@ -11,7 +11,7 @@
                             <strong>Add Agent</strong>
                         </div>
                         <div class="card-body card-block">
-                            <form action="../../admin/agents/store" method="post" class="form-horizontal">
+                            <form action="../../admin/agents/store" method="post" class="form-horizontal" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row form-group">
                                     <div class="col col-md-4">
@@ -141,6 +141,14 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-4">
+                                        <label for="text-input" class=" form-control-label">Upload KYC</label>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <input type="file" class="form-control" name="kyc" id="kyc">
+                                    </div>
                                 </div>       
                                                  
                         </div>
@@ -148,9 +156,9 @@
                             <button type="submit" class="btn btn-primary btn-sm float-right">
                                 <i class="fa fa-dot-circle-o"></i> Submit
                             </button>
-                            <button type="reset" class="btn btn-danger btn-sm">
+                             <a href="{{url('admin/agents')}}"><button type="reset" class="btn btn-danger btn-sm">
                                 <i class="fa fa-ban"></i> Cancel
-                            </button>
+                            </button></a>
                         </div>
                     </form>
                     </div>

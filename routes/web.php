@@ -39,6 +39,8 @@ Route::group(['prefix' => 'admin'], function(){
 
 		Route::get('delete/{id}', 'UserController@destroy');
 
+		Route::get('detail/{id}', 'UserController@detail');
+
 	});
 
 	Route::group(['prefix' => 'users'], function(){

@@ -29,6 +29,14 @@
                                         <input type="number" id="id" name="id" class="form-control d-none" value="{{Auth::user()->id}}">
                                     </div>
                                 </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-4">
+                                        <label for="text-input" class=" form-control-label">Date</label>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <input type="date" id="date" name="date" class="form-control">
+                                    </div>
+                                </div>
                                 @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
                                     <div class="row form-group">
                                         <div class="col col-md-4">

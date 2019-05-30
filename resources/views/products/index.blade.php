@@ -37,7 +37,8 @@
                                         <th>Product Name</th>
                                         <th>Merchant Name</th>
                                         <th>Commission - Dealer (%)</th>
-                                        <th>Commission - Merchant (%)</th>
+                                        <th>Commission - Funded Agent (%)</th>
+                                        <th>Commission - Self Funded Agent (%)</th>
                                         <th>Created On</th>
                                         <th></th>
                                     </tr>
@@ -56,7 +57,8 @@
                                             <td>
                                                 {{$p->comm_self}}
                                             </td>
-                                            <td class="desc">{{$p->comm_cmp}}</td>
+                                            <td class="desc">{{$p->comm_funded}}</td>
+                                            <td class="desc">{{$p->comm_self_funded}}</td>
                                             <?php 
                                                 $createdAt = Carbon\Carbon::parse($p->created_at)->format('M d Y');
                                             ?>

@@ -41,8 +41,9 @@ class ProductController extends Controller
         $data = new Product;
         $data->product_name = $_POST['product_name'];
         $data->company_name = $_POST['company_name'];
+        $data->comm_self_funded = $_POST['comm_self_funded'];
+        $data->comm_funded = $_POST['comm_funded'];
         $data->comm_self = $_POST['comm_self'];
-        $data->comm_cmp = $_POST['comm_cmp'];
 
         if ($data->save()) {
             return redirect("admin/products")->with('success','Product added successfully.');

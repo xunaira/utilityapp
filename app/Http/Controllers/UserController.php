@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use DB;
 use Hash;
 
+
 class UserController extends Controller
 {
     /**
@@ -72,6 +73,13 @@ class UserController extends Controller
         $data->supervisor_id = $request->get('sup');
         $data->commission = $request->get('commission');
         $data->salary = $request->get('salary');
+
+        if($request->hasFile('kyc')){
+            $img = $request->file('kyc');
+            $thumb = 'kyc-' . $request->get('name'). " " . time() . '.' . $img->getClientOriginalExtension();
+            $path = $img->storeAs('public/img/kyc', $thumb);
+            $data->kyc = $path;
+        }
        
        if($data->save()){
             $id = agents_migration::where('email', $request->get('email'))->select('id')->get();
@@ -112,9 +120,25 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $agents = agents_migration::find($id);
+        if(Auth::user()->role_id == 1){
+            $agents = DB::table('agents')
+            ->join('supervisor', 'supervisor.user_id', '=', 'agents.supervisor_id')
+            ->join('users', 'agents.id', '=', 'users.agent_id')
+            ->select('users.*','agents.*', 'supervisor.name as sup')
+            ->where('agents.id', $id)
+            ->get();
+            $sup = DB::table('supervisor')->select('id', 'name')->get();
+        }else{
+            $agents = DB::table('agents')
+            ->join('supervisor', 'supervisor.user_id', '=', 'agents.supervisor_id')
+            ->join('users', 'agents.id', '=', 'users.agent_id')
+            ->select('users.*','agents.*', 'supervisor.name as sup')
+            ->where([['supervisor_id', Auth::user()->id], ['agents.id', $id]])
+            ->get();
+            $sup = DB::table('supervisor')->select('id', 'name')->get();
+        }
 
-        return view('users.edit', ['agents' => $agents]);
+        return view('users.edit', ['agents' => $agents, 'sup' => $sup]);
     }
 
     /**
@@ -126,26 +150,43 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
+        $user = User::where('agent_id', $request->get('id'))->first();
         $data = agents_migration::find($request->get('id'));
-        $data->name = $_POST['name'];
-        $data->username = $_POST['username'];
-        $data->password = $_POST['password'];
-        $data->email = $_POST['email'];
-        $data->address1 = $_POST['address1'];
-        $data->address2 = $_POST['address2'];
-        $data->city = $_POST['city'];
-        $data->state = $_POST['state'];
-        $data->country = $_POST['country'];
-        $data->phone_no = $_POST['phone_no'];
-        $data->operational_area = $_POST['operational_area'];
-        $data->agent_type = $_POST['type'];
+        $data->address1 = $request->get('address1');
+        $data->address2 = $request->get('address2');
+        $data->city = $request->get('city');
+        $data->state = $request->get('state');
+        $data->country = $request->get('country');
+        $data->phone_no = $request->get('phone_no');
+        $data->operational_area = $request->get('operational_area');
+        $data->agent_type = $request->get('type');
+        $data->supervisor_id = $request->get('sup');
+        $data->commission = $request->get('commission');
+        $data->salary = $request->get('salary');
 
-        if ($data->save()) {
-            return redirect("admin/agents")->with('success','Product added successfully.');
-        } else {
-            return redirect("admin/agents")->with('error','Product Not Added');
+        if($request->hasFile('kyc')){
+            $img = $request->file('kyc');
+            $thumb = 'kyc-' . $request->get('name'). " " . time() . '.' . $img->getClientOriginalExtension();
+            $path = $img->storeAs('public/img/kyc', $thumb);
+            $data->kyc = $path;
         }
+       
+       if($data->save()){
+            $id = agents_migration::where('email', $request->get('email'))->select('id')->get();
+            foreach($id as $i){
+                $user->agent_id = $i->id;
+            }
+            $user->name = $request->get('name');
+             $user->username = $request->get('username');
+            $user->role_id = 3;               
+
+            if ($user->save()) {
+                return redirect("admin/agents")->with('success','Agent added successfully.');
+            } else {
+                return redirect("admin/agents")->with('error','Agent Not Added');
+            }
     }
+}
 
     /**
      * Remove the specified resource from storage.
@@ -199,5 +240,30 @@ class UserController extends Controller
             return back()->with('error','Funds not added.');
         }
 
+    }
+
+    public function detail($id){
+        if(Auth::user()->role_id == 1){
+            $agents = DB::table('agents')
+            ->join('supervisor', 'supervisor.user_id', '=', 'agents.supervisor_id')
+            ->join('users', 'agents.id', '=', 'users.agent_id')
+            ->select('users.*','agents.*', 'supervisor.name as sup')
+            ->where('agents.id', $id)
+            ->get();
+            
+        }else{
+            $agents = DB::table('agents')
+            ->join('supervisor', 'supervisor.user_id', '=', 'agents.supervisor_id')
+            ->join('users', 'agents.id', '=', 'users.agent_id')
+            ->select('users.*','agents.*', 'supervisor.name as sup')
+            ->where([['supervisor_id', Auth::user()->id], ['agents.id', $id]])
+            ->get();
+            
+        }
+
+        $wallet = Wallet::where([['user_id', $id], ['date', Carbon::now()->toDateString()]])->select('total_funds')->first();
+        
+
+        return view('users.detail', ['agents' => $agents, 'wallet' => $wallet]);
     }
 }

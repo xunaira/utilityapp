@@ -24,7 +24,7 @@
                                 </a>
                               </div>
               </div>
-            	<div class="col-6 mx-auto d-block">
+            	<div class="col-md-8 mx-auto d-block">
             		<div class="card">
             			@foreach($agents as $a)
             			     <div class="card-header user-header alt bg-dark">
@@ -69,11 +69,7 @@
                            		<div id="supervisor">
                            			<label class="form-control-label">Supervisor:</label>
                            			<h5 class="d-inline form-control-label">{{$a->sup}}</h5>
-                           		</div>
-                           		<div id="kyc" class="mb-2">
-                           			<?php $url = $a->kyc; ?>
-                                    <a href="{{Storage::url($url)}}" class="btn-info pl-3 pr-3" target="_blank">View KYC</a>
-                           		</div>
+                           		</div>       
 
                            	</div>
                            	<div class="col-6">
@@ -97,12 +93,24 @@
                            			<label class="form-control-label">Salary:</label>
                            			<h5 class="d-inline form-control-label">{{$a->salary}}</h5>
                            		</div>
+                              <div id="kyc" class="mb-2">
+                                <?php $url = $a->kyc; ?>
+                                    <a href="{{Storage::url($url)}}" class="btn-info pl-3 pr-3" target="_blank">View KYC</a>
+                              </div>
                            	</div>
                            </div>
                         </div>
                         @endforeach
                     </div>
-            	</div>
+            	  <div class="card">
+                  <div class="card-header user-header alt bg-info">
+                      <h2 class="text-light display-6 mb-2">Transactions</h2>
+                  </div>
+                  <div class="card-body">
+                    
+                  </div>
+                </div>
+              </div>
             </div>
         </div>
     </div>

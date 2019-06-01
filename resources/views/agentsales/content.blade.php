@@ -67,13 +67,13 @@
                                                             </button>
                                                         </a>
                                                         @if($p->status == "Approved")
-                                                            <a href="" class="pr-4">
+                                                            <a href="#" class="pr-4">
                                                                 <button class="item" data-toggle="tooltip" data-placement="top" title="Approve" style="background-color: #28a745 !important">
                                                                     <i class="fa fa-check" style="color: #fff;"></i>
                                                                 </button>
                                                             </a>
                                                         @else
-                                                             <a href="" class="pr-4">
+                                                             <a href="../admin/agent-sales/approve/{{$p->id}}" class="pr-4">
                                                                 <button class="item" data-toggle="tooltip" data-placement="top" title="Approve">
                                                                     <i class="fa fa-check"></i>
                                                                 </button>

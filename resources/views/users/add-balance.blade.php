@@ -22,10 +22,19 @@
                                 @csrf
                                 <div class="row form-group">
                                     <div class="col col-md-4">
-                                        <label for="text-input" class=" form-control-label">Total Fundings</label>
+                                        <label for="text-input" class=" form-control-label">Cash in Bank</label>
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <input type="number" id="fundings" name="fundings" class="form-control">
+                                        <input type="number" id="cash_bank" name="cash_bank" class="form-control">
+                                        <input type="number" id="id" name="id" class="form-control d-none" value="{{Auth::user()->id}}">
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-4">
+                                        <label for="text-input" class=" form-control-label">Cash in Hand</label>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <input type="number" id="cash_hand" name="cash_hand" class="form-control">
                                         <input type="number" id="id" name="id" class="form-control d-none" value="{{Auth::user()->id}}">
                                     </div>
                                 </div>

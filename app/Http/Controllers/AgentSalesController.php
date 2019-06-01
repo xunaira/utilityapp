@@ -8,6 +8,7 @@ use Auth;
 use App\agents_migration as Agents;
 use DB;
 use App\Wallet;
+use App\Transactions;
 use Carbon\Carbon;
 
 class AgentSalesController extends Controller
@@ -37,9 +38,10 @@ class AgentSalesController extends Controller
         $products = Product::all();
         $agents = DB::table('users')
             ->join('agents', 'users.agent_id', '=', 'agents.id')
-            ->join('wallet', 'users.id', '=', 'wallet.user_id')
+            ->join('wallet', 'agents.id', '=', 'wallet.user_id')
             ->select('users.name', 'users.username', 'users.email','agents.*', 'wallet.*', 'users.agent_id')
             ->get();
+            
         return view("agentsales.add",['products' => $products, 'agents' => $agents]);
     } 
 
@@ -57,13 +59,20 @@ class AgentSalesController extends Controller
         'date' => 'required',
         ]);
 
+        $id = $request->get('agent');
+        
         if($validatedData) {
-            $data =new AgentSales;
-            $data->fill($request->all());
-            if ($data->save()) {
-                return back()->with('success','Sale added successfully.');
-            } else {
-                return back()->with('error','Sale Not updated');
+            //check if wallet exists for this agent
+            $wallet = Wallet::where([['user_id', $id], ['date', Carbon::now()->toDateString()]])->get();
+            if(!empty($wallet)){
+                $data =new AgentSales;
+                $data->fill($request->all());
+                if ($data->save()) {
+                    return back()->with('success','Sale added successfully.');
+                } else {
+                    return back()->with('error','Sale Not updated');
+                }
+
             }
         }
     }
@@ -168,5 +177,36 @@ class AgentSalesController extends Controller
 
         return response()->json(['funds'=>$b]);
 
+    }
+
+    public function approve($id){
+        $sales_id = $id;
+        $today = Carbon::now()->toDateString();
+        $sale = AgentSales::find($id);
+        $sale->status = "Approved";
+        if($sale->save()){
+            //deduct the sale cost from wallet 
+            $new_sale = AgentSales::where('id', $id)->select('sale_value', 'agent')->first();
+            $wallet = Wallet::where([['user_id', $new_sale->agent], ['date', '>=', $today]])->select('total_funds')->first();
+            $funds = $wallet->total_funds;
+            $salevalue = $new_sale->sale_value;
+            $total = $funds - $salevalue;
+
+            $w_id =  Wallet::where([['user_id', $new_sale->agent], ['date', '>=', $today]])->select('id')->first();
+            
+            //insert transaction of the sale 
+            $a_s = new Transactions;
+            $a_s->wallet_id = $w_id->id;
+            $a_s->sales_id = $sales_id;
+            $a_s->agent_id = $new_sale->agent;
+            $a_s->date = Carbon::now()->toDateString();
+            $a_s->closing_balance = $total;
+            
+            if($a_s->save()){
+                return back()->with('success','Sale Approved Successfully');
+            } else {
+                return back()->with('error','Sale Not Approved');
+            }
+        }         
     }
 }

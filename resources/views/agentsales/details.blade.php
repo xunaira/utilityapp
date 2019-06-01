@@ -7,6 +7,11 @@
             <div class="row">
               <div class="col-12">
                 <div class="float-right mb-3">
+                  <a href="{{url('admin/agents/add')}}">
+                    <button class="au-btn au-btn-icon au-btn--green au-btn--small">
+                      <i class="zmdi zmdi-plus"></i>Add Agent
+                    </button>
+                  </a>
                   <a href="{{url('admin/agent-sales/add')}}">
                     <button class="au-btn au-btn-icon btn-info au-btn--small">
                       <i class="zmdi zmdi-plus"></i>Add Agent Sales
@@ -29,8 +34,8 @@
                                     <p class="text-light text-capitalize">{{$a->agent_type}}</p>                                
                                 </div>
                                 <div class="float-right d-inline">
-                                  @if(!empty($w))
-                                    	<span class="badge badge-primary pr-3 pl-3 pt-2 pb-2">Wallet: &#8358; {{$w}}</span>
+                                  @if(!empty($wallet))
+                                    	<span class="badge badge-primary pr-3 pl-3 pt-2 pb-2">Wallet: &#8358; {{$wallet->total_funds}}</span>
                                   @else
 
                                       <span class="badge badge-primary pr-3 pl-3 pt-2 pb-2">Wallet: &#8358; 0</span>
@@ -97,85 +102,12 @@
                         </div>
                         @endforeach
                     </div>
-                    <div class="card">
-                  <div class="card-header user-header alt bg-success">
-                      <h2 class="text-light display-6 mb-2">Bank Balance</h2>
-                  </div>
-                  <div class="card-body">
-                    <table class="table table-top-countries">
-                        <thead>
-                          <th>
-                            Cash in Bank
-                          </th>
-                          <th>
-                            Cash in Hand
-                          </th>
-                          <th>
-                            Total Funds
-                          </th>
-                          <th>
-                            Closing Balance
-                          </th>
-                          <th>
-                            Date
-                          </th>
-                        </thead>
-                        <tbody>
-                          @foreach($balance as $c)
-                          <tr>
-                            <td class="text-dark">&#8358; {{$c->cash_bank}}</td>
-                            <td class="text-dark">&#8358; {{$c->cash_in_hand}}</td>
-                            <td class="text-dark">&#8358; {{$c->total_funds}}</td>
-                            <td class="text-dark">&#8358; {{$c->closing_balance}}</td>
-                            <td class="text-dark">
-                              <?php 
-                                $createdAt = Carbon\Carbon::parse($c->date)->format('M d Y');
-                              ?> 
-                              {{$createdAt}}
-                            </td>
-                          </tr>
-                          @endforeach
-                        </tbody>
-                    </table>
-                  </div>
-                </div>
             	  <div class="card">
                   <div class="card-header user-header alt bg-info">
-                      <h2 class="text-light display-6 mb-2 d-inline">Transactions</h2>
-                      <a href="{{url('admin/agents/export')}}" class="d-inline float-right">                    
-                        <i class="zmdi zmdi-download text-light zmdi-hc-2x"></i>                    
-                      </a>
+                      <h2 class="text-light display-6 mb-2">Transactions</h2>
                   </div>
                   <div class="card-body">
-                    <div class="table-responsive m-b-40">
-                      <table class="table table-top-countries">
-                        <thead>
-                          <tr>
-                            <th>Product</th>
-                            <th>Product Price</th>
-                            <th>Wallet</th>
-                            <th>Closing Balance</th>
-                            <th>Date</th>                                            
-                          </tr>
-                        </thead>
-                        <tbody>
-                          @foreach($transactions as $t)
-                           <tr>
-                              <td class="text-dark">{{$t->product_name}}</td>
-                              <td class="text-dark">&#8358; {{$t->sale_value}}</td>
-                              <td class="text-dark">&#8358; {{$t->total_funds}}</td>
-                              <td class="text-dark">&#8358; {{$t->closing_balance}}</td>
-                              <td class="text-dark">
-                                <?php 
-                                  $createdAt = Carbon\Carbon::parse($t->date)->format('M d Y');
-                                ?>
-                                {{$createdAt}}
-                              </td>                                            
-                            </tr>
-                          @endforeach
-                        </tbody>
-                      </table>
-                    </div>
+                    
                   </div>
                 </div>
               </div>

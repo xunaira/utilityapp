@@ -31,6 +31,18 @@
                         </li>
                         <li class="has-sub">
                             <a class="js-arrow" href="#">
+                                <i class="zmdi zmdi-settings"></i>Reports</a>
+                            <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                <li>
+                                    <a href="{{url('admin/settings/')}}">Sales Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/settings/balance/')}}">Wallet Reports</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="has-sub">
+                            <a class="js-arrow" href="#">
                                 <i class="zmdi zmdi-settings"></i>Settings</a>
                             <ul class="list-unstyled navbar__sub-list js-sub-list">
                                 <li>

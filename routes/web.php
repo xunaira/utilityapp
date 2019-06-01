@@ -41,6 +41,8 @@ Route::group(['prefix' => 'admin'], function(){
 
 		Route::get('detail/{id}', 'UserController@detail');
 
+		Route::get('export', 'UserController@export');
+
 	});
 
 	Route::group(['prefix' => 'users'], function(){
@@ -93,6 +95,8 @@ Route::group(['prefix' => 'admin'], function(){
 		Route::post('ajax', 'AgentSalesController@productGet')->name('get_product');
 
 		Route::get('balance', 'AgentSalesController@getTotalBalance');
+
+		Route::get('approve/{id}', 'AgentSalesController@approve');
 	});
 
 	Route::group(['prefix' => 'settings'], function(){

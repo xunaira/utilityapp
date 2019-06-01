@@ -10,6 +10,9 @@ use Auth;
 use Carbon\Carbon;
 use DB;
 use Hash;
+use App\Transactions;
+use App\Exports\AgentExport;
+use Excel;
 
 
 class UserController extends Controller
@@ -218,7 +221,13 @@ class UserController extends Controller
 
     public function balance(Request $r){
         $wallet = new Wallet();
-        $wallet->total_funds = $r->get('fundings');
+        
+        $cash_in_hand = $r->get('cash_hand');
+        $cash_bank = $r->get('cash_bank');
+        
+        $wallet->total_funds = $cash_in_hand + $cash_bank;
+        $wallet->cash_in_hand = $cash_in_hand;
+        $wallet->cash_bank = $cash_bank;
         
         if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2){
             $user_id = $r->get('agent');
@@ -250,6 +259,12 @@ class UserController extends Controller
             ->select('users.*','agents.*', 'supervisor.name as sup')
             ->where('agents.id', $id)
             ->get();
+
+            $balance = DB::table('transactions')
+                       ->join('wallet', 'transactions.wallet_id', '=', 'wallet.id')
+                       ->where('agent_id', $id)
+                       ->get();
+        
             
         }else{
             $agents = DB::table('agents')
@@ -258,12 +273,33 @@ class UserController extends Controller
             ->select('users.*','agents.*', 'supervisor.name as sup')
             ->where([['supervisor_id', Auth::user()->id], ['agents.id', $id]])
             ->get();
+
+            $balance = DB::table('transactions')
+                       ->join('wallet', 'transactions.wallet_id', '=', 'wallet.id')
+                       ->where('agent_id', $id)
+                       ->get();
+            
             
         }
 
-        $wallet = Wallet::where([['user_id', $id], ['date', Carbon::now()->toDateString()]])->select('total_funds')->first();
-        
+    //    $wallet = Wallet::where([['user_id', $id], ['date', Carbon::now()->toDateString()]])->select('total_funds')->first();
+        $wallet = Transactions::where([['agent_id', $id], ['date', Carbon::now()->toDateString()]])->selectRaw('SUM(closing_balance) as w')->get();
+        foreach($wallet as $b){
+            $w = $b->w;
+        }
 
-        return view('users.detail', ['agents' => $agents, 'wallet' => $wallet]);
+        $transactions = DB::table('transactions')
+                        ->join('wallet', 'transactions.wallet_id', '=', 'wallet.id')
+                        ->join('add_sales', 'transactions.sales_id', '=', 'add_sales.id')
+                        ->join('products', 'add_sales.product_id', '=', 'products.id')
+                        ->where('agent_id', $id)
+                        ->paginate(15);
+                        
+
+        return view('users.detail', ['agents' => $agents, 'w' => $w, 'balance' => $balance, 'transactions' => $transactions]);
+    }
+
+    public function export(){
+       return Excel::download(new AgentExport, 'invoices.xlsx');
     }
 }

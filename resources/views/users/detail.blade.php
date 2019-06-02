@@ -30,11 +30,14 @@
                                 </div>
                                 <div class="float-right d-inline">
                                   @if(!empty($w))
-                                    	<span class="badge badge-primary pr-3 pl-3 pt-2 pb-2">Wallet: &#8358; {{$w}}</span>
+                                    	<span class="badge badge-primary pr-3 pl-3 pt-2 pb-2 mr-4">Wallet: &#8358; {{$w}}</span>
                                   @else
 
-                                      <span class="badge badge-primary pr-3 pl-3 pt-2 pb-2">Wallet: &#8358; 0</span>
+                                      <span class="badge badge-primary pr-3 pl-3 pt-2 pb-2 mr-4">Wallet: &#8358; 0</span>
                                   @endif
+                                  <a href="../../../{{$detailurl}}" class="d-inline float-right">                    
+                                    <i class="zmdi zmdi-download text-light zmdi-hc-2x"></i>                    
+                                  </a>
                                     </div>
                             </div>
                         </div>                        
@@ -99,7 +102,10 @@
                     </div>
                     <div class="card">
                   <div class="card-header user-header alt bg-success">
-                      <h2 class="text-light display-6 mb-2">Bank Balance</h2>
+                      <h2 class="text-light display-6 mb-2 d-inline">Bank Balance</h2>
+                      <a href="../../../{{$bankurl}}" class="d-inline float-right">                    
+                                    <i class="zmdi zmdi-download text-light zmdi-hc-2x"></i>                    
+                                  </a>
                   </div>
                   <div class="card-body">
                     <table class="table table-top-countries">
@@ -142,7 +148,7 @@
             	  <div class="card">
                   <div class="card-header user-header alt bg-info">
                       <h2 class="text-light display-6 mb-2 d-inline">Transactions</h2>
-                      <a href="{{url('admin/agents/export')}}" class="d-inline float-right">                    
+                      <a href="../../../{{$exporturl}}" class="d-inline float-right">                    
                         <i class="zmdi zmdi-download text-light zmdi-hc-2x"></i>                    
                       </a>
                   </div>

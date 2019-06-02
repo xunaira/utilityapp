@@ -40,6 +40,7 @@ class AgentSalesController extends Controller
             ->join('agents', 'users.agent_id', '=', 'agents.id')
             ->join('wallet', 'agents.id', '=', 'wallet.user_id')
             ->select('users.name', 'users.username', 'users.email','agents.*', 'wallet.*', 'users.agent_id')
+            ->where('wallet.date', Carbon::now()->toDateString())
             ->get();
             
         return view("agentsales.add",['products' => $products, 'agents' => $agents]);

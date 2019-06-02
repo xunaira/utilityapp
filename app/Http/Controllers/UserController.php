@@ -12,6 +12,8 @@ use DB;
 use Hash;
 use App\Transactions;
 use App\Exports\AgentExport;
+use App\Exports\AgentDetailExport;
+use App\Exports\BankExport;
 use Excel;
 
 
@@ -281,25 +283,70 @@ class UserController extends Controller
             
             
         }
-
-    //    $wallet = Wallet::where([['user_id', $id], ['date', Carbon::now()->toDateString()]])->select('total_funds')->first();
+   
         $wallet = Transactions::where([['agent_id', $id], ['date', Carbon::now()->toDateString()]])->selectRaw('SUM(closing_balance) as w')->get();
         foreach($wallet as $b){
             $w = $b->w;
         }
 
+    
         $transactions = DB::table('transactions')
                         ->join('wallet', 'transactions.wallet_id', '=', 'wallet.id')
                         ->join('add_sales', 'transactions.sales_id', '=', 'add_sales.id')
                         ->join('products', 'add_sales.product_id', '=', 'products.id')
                         ->where('agent_id', $id)
                         ->paginate(15);
-                        
-
-        return view('users.detail', ['agents' => $agents, 'w' => $w, 'balance' => $balance, 'transactions' => $transactions]);
+        $exporturl = "admin/agents/export/" . $id;
+        $detailurl = "admin/agents/agentexport/" . $id;
+        $bankurl = "admin/agents/bankexport/" . $id;
+        
+        return view('users.detail', ['agents' => $agents, 'w' => $w, 'balance' => $balance, 'transactions' => $transactions, 'exporturl' => $exporturl, 'detailurl' => $detailurl, 'bankurl' => $bankurl]);
     }
 
-    public function export(){
-       return Excel::download(new AgentExport, 'invoices.xlsx');
+    public function export($id){
+       $transactions = DB::table('transactions')
+                        ->join('wallet', 'transactions.wallet_id', '=', 'wallet.id')
+                        ->join('add_sales', 'transactions.sales_id', '=', 'add_sales.id')
+                        ->join('products', 'add_sales.product_id', '=', 'products.id')
+                        ->select('products.product_name', 'add_sales.sale_value', 'wallet.total_funds', 'transactions.closing_balance', 'transactions.date')
+                        ->where('agent_id', $id)
+                        ->paginate(15);
+        $name = User::where('agent_id', $id)->select('name')->first();
+        $file_name = $name->name . ".xlsx";
+       return Excel::download(new AgentExport($transactions), $file_name);
+    }
+
+    public function agentexport($id){
+        if(Auth::user()->role_id == 1){
+            $agents = DB::table('agents')
+            ->join('supervisor', 'supervisor.user_id', '=', 'agents.supervisor_id')
+            ->join('users', 'agents.id', '=', 'users.agent_id')
+            ->select('users.name','users.email','agents.address1', 'agents.address2', 'agents.city', 'agents.state', 'agents.country', 'agents.phone_no', 'agents.operational_area', 'agents.salary', 'supervisor.name as sup')
+            ->where('agents.id', $id)
+            ->get();
+            
+        }else{
+            $agents = DB::table('agents')
+            ->join('supervisor', 'supervisor.user_id', '=', 'agents.supervisor_id')
+            ->join('users', 'agents.id', '=', 'users.agent_id')
+            ->select('users.name','users.email','agents.address1', 'agents.address2', 'agents.city', 'agents.state', 'agents.country', 'agents.phone_no', 'agents.operational_area', 'agents.salary', 'supervisor.name as sup')
+            ->where([['supervisor_id', Auth::user()->id], ['agents.id', $id]])
+            ->get();
+        }
+        $name = User::where('agent_id', $id)->select('name')->first();
+        $file_name = $name->name . ".xlsx";
+        
+       return Excel::download(new AgentDetailExport($agents), $file_name);
+    }
+
+    public function bankexport($id){
+        $balance = DB::table('transactions')
+                    ->join('wallet', 'transactions.wallet_id', '=', 'wallet.id')
+                    ->select('wallet.cash_in_hand', 'wallet.cash_bank', 'transactions.closing_balance', 'wallet.total_funds', 'transactions.date')
+                    ->where('agent_id', $id)
+                    ->get();
+        $name = User::where('agent_id', $id)->select('name')->first();
+        $file_name = $name->name . ".xlsx";
+        return Excel::download(new BankExport($balance), $file_name);
     }
 }

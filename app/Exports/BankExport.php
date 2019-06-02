@@ -8,33 +8,32 @@ use Auth;
 use DB;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-
-class AgentExport implements FromCollection, WithHeadings
+class BankExport implements FromCollection, WithHeadings
 {
     /**
     * @return \Illuminate\Support\Collection
     */
-    private $transactions;
+    private $balance;
 
-    public function __construct($transactions)
+    public function __construct($balance)
     {
-        $this->transactions = $transactions;
-       
+        $this->balance = $balance;
     }
+
     public function collection()
     {
     	
-        return $this->transactions;
+       return $this->balance;
     }
 
     public function headings(): array
     {
         return [
-            'Product Name',
-            'Sale Value',
+            'Cash in Bank',
+            'Cash in Hand',
             'Total Funds',
             'Closing Balance',
-            'Transaction Date'
+            'Date'
         ];
     }
 }

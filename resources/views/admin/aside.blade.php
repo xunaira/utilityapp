@@ -16,8 +16,13 @@
                         <li>
                             <a href="{{url('admin/products')}}">
                                 <i class="fas fa-chart-bar"></i>Products</a>
-                            </li>
+                        </li>
                         <li>
+                            <a href="{{url('admin/company')}}">
+                                <i class="fas fa-chart-bar"></i>Company</a>
+                        </li>
+                        <li>
+
                             <a href="{{url('admin/agents')}}">
                                 <i class="fas fa-users"></i>Agents</a>
                         </li>
@@ -34,10 +39,13 @@
                                 <i class="zmdi zmdi-settings"></i>Reports</a>
                             <ul class="list-unstyled navbar__sub-list js-sub-list">
                                 <li>
-                                    <a href="{{url('admin/settings/')}}">Sales Reports</a>
+                                    <a href="{{url('admin/reports/sales-reports/')}}">Sales Reports</a>
                                 </li>
                                 <li>
-                                    <a href="{{url('admin/settings/balance/')}}">Wallet Reports</a>
+                                    <a href="{{url('admin/reports/wallet-reports/')}}">Wallet Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/reports/agent-reports/')}}">Agents</a>
                                 </li>
                             </ul>
                         </li>
@@ -64,6 +72,10 @@
                                         <i class="fas fa-chart-bar"></i>Products</a>
                                 </li>
                                 <li>
+                                    <a href="{{url('admin/company')}}">
+                                        <i class="fas fa-chart-bar"></i>Company</a>
+                                </li>
+                                <li>
                                     <a href="{{url('admin/agents')}}">
                                         <i class="fas fa-users"></i>Agents</a>
                                 </li>
@@ -74,6 +86,74 @@
                                 <li>
                                     <a href="{{url('admin/agent-sales')}}">
                                         <i class="fas fa-users"></i>Agent Sales</a>
+                                </li>
+                                <li class="has-sub">
+                                    <a class="js-arrow" href="#">
+                                        <i class="zmdi zmdi-settings"></i>Reports</a>
+                                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                        <li>
+                                            <a href="{{url('admin/reports/sales-reports/')}}">Sales Reports</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{url('admin/reports/wallet-reports/')}}">Wallet Reports</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{url('admin/reports/agent-reports/')}}">Agents</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="has-sub">
+                                    <a class="js-arrow" href="#">
+                                        <i class="zmdi zmdi-settings"></i>Settings</a>
+                                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                        <li>
+                                            <a href="{{url('admin/settings/')}}">Commission Dashboard</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{url('admin/settings/balance/')}}">System Balance</a>
+                                        </li>
+                                        
+                                    </ul>
+                                </li>
+                    @elseif (\Request::is('admin/company') || \Request::is('admin/company/*'))
+                                <li>
+                                    <a class="js-arrow" href="{{url('admin/dashboard')}}">
+                                        <i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                                </li> 
+                                <li>
+                                    <a href="{{url('admin/products')}}">
+                                        <i class="fas fa-chart-bar"></i>Products</a>
+                                </li>
+                                <li class="active">
+                                    <a href="{{url('admin/company')}}">
+                                        <i class="fas fa-chart-bar"></i>Company</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/agents')}}">
+                                        <i class="fas fa-users"></i>Agents</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/users')}}">
+                                        <i class="fas fa-users"></i>Users</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/agent-sales')}}">
+                                        <i class="fas fa-users"></i>Agent Sales</a>
+                                </li>
+                                <li class="has-sub">
+                                    <a class="js-arrow" href="#">
+                                        <i class="zmdi zmdi-settings"></i>Reports</a>
+                                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                        <li>
+                                            <a href="{{url('admin/reports/sales-reports/')}}">Sales Reports</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{url('admin/reports/wallet-reports/')}}">Wallet Reports</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{url('admin/reports/agent-reports/')}}">Agents</a>
+                                        </li>
+                                    </ul>
                                 </li>
                                 <li class="has-sub">
                                     <a class="js-arrow" href="#">
@@ -97,6 +177,10 @@
                                     <a href="{{url('admin/products')}}">
                                         <i class="fas fa-chart-bar"></i>Products</a>
                                 </li>
+                                <li>
+                            <a href="{{url('admin/company')}}">
+                                <i class="fas fa-chart-bar"></i>Company</a>
+                        </li>
                                 <li class="active">
                                     <a href="{{url('admin/agents')}}">
                                         <i class="fas fa-users"></i>Agents</a>
@@ -108,6 +192,21 @@
                                 <li>
                                     <a href="{{url('admin/agent-sales')}}">
                                         <i class="fas fa-users"></i>Agent Sales</a>
+                                </li>
+                                <li class="has-sub">
+                                    <a class="js-arrow" href="#">
+                                        <i class="zmdi zmdi-settings"></i>Reports</a>
+                                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                        <li>
+                                            <a href="{{url('admin/reports/sales-reports/')}}">Sales Reports</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{url('admin/reports/wallet-reports/')}}">Wallet Reports</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{url('admin/reports/agent-reports/')}}">Agents</a>
+                                        </li>
+                                    </ul>
                                 </li>
                                 <li class="has-sub">
                                     <a class="js-arrow" href="#">
@@ -132,6 +231,10 @@
                                         <i class="fas fa-chart-bar"></i>Products</a>
                                 </li>
                                 <li>
+                            <a href="{{url('admin/company')}}">
+                                <i class="fas fa-chart-bar"></i>Company</a>
+                        </li>
+                                <li>
                                     <a href="{{url('admin/agents')}}">
                                         <i class="fas fa-users"></i>Agents</a>
                                 </li>
@@ -143,6 +246,22 @@
                                     <a href="{{url('admin/agent-sales')}}">
                                         <i class="fas fa-users"></i>Agent Sales</a>
                                 </li>
+                                <li class="has-sub">
+                                    <a class="js-arrow" href="#">
+                                        <i class="zmdi zmdi-settings"></i>Reports</a>
+                                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                        <li>
+                                            <a href="{{url('admin/reports/sales-reports/')}}">Sales Reports</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{url('admin/reports/wallet-reports/')}}">Wallet Reports</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{url('admin/reports/agent-reports/')}}">Agents</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
                                 <li class="has-sub">
                                     <a class="js-arrow" href="#">
                                         <i class="zmdi zmdi-settings"></i>Settings</a>
@@ -162,6 +281,10 @@
                                         <i class="fas fa-tachometer-alt"></i>Dashboard</a>
                                 </li> 
                                 <li>
+                            <a href="{{url('admin/company')}}">
+                                <i class="fas fa-chart-bar"></i>Company</a>
+                        </li>
+                                <li>
                                     <a href="{{url('admin/products')}}">
                                         <i class="fas fa-chart-bar"></i>Products</a>
                                 </li>
@@ -176,6 +299,74 @@
                                 <li class="active">
                                     <a href="{{url('admin/agent-sales')}}">
                                         <i class="fas fa-users"></i>Agent Sales</a>
+                                </li>
+                                <li class="has-sub">
+                                    <a class="js-arrow" href="#">
+                                        <i class="zmdi zmdi-settings"></i>Reports</a>
+                                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                        <li>
+                                    <a href="{{url('admin/reports/sales-reports/')}}">Sales Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/reports/wallet-reports/')}}">Wallet Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/reports/agent-reports/')}}">Agents</a>
+                                </li>
+                                    </ul>
+                                </li>
+                                <li class="has-sub">
+                                    <a class="js-arrow" href="#">
+                                        <i class="zmdi zmdi-settings"></i>Settings</a>
+                                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                        <li>
+                                            <a href="{{url('admin/settings/')}}">Commission Dashboard</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{url('admin/settings/balance/')}}">System Balance</a>
+                                        </li>
+                                        
+                                    </ul>
+                                </li>
+                    @elseif (\Request::is('admin/reports') || \Request::is('admin/reports/*'))
+                                <li>
+                                    <a class="js-arrow" href="{{url('admin/dashboard')}}">
+                                        <i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                                </li> 
+                                <li>
+                                    <a href="{{url('admin/products')}}">
+                                        <i class="fas fa-chart-bar"></i>Products</a>
+                                </li>
+                                <li>
+                            <a href="{{url('admin/company')}}">
+                                <i class="fas fa-chart-bar"></i>Company</a>
+                        </li>
+                                <li>
+                                    <a href="{{url('admin/agents')}}">
+                                        <i class="fas fa-users"></i>Agents</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/users')}}">
+                                        <i class="fas fa-users"></i>Users</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/agent-sales')}}">
+                                        <i class="fas fa-users"></i>Agent Sales</a>
+                                </li>
+                                <li class="active has-sub">
+                                    <a class="js-arrow" href="#">
+                                        <i class="zmdi zmdi-settings"></i>Reports</a>
+                                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                        <li>
+                                    <a href="{{url('admin/reports/sales-reports/')}}">Sales Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/reports/wallet-reports/')}}">Wallet Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/reports/agent-reports/')}}">Agents</a>
+                                </li>
+                                    </ul>
                                 </li>
                                 <li class="has-sub">
                                     <a class="js-arrow" href="#">
@@ -200,6 +391,10 @@
                                         <i class="fas fa-chart-bar"></i>Products</a>
                                 </li>
                                 <li>
+                            <a href="{{url('admin/company')}}">
+                                <i class="fas fa-chart-bar"></i>Company</a>
+                        </li>
+                                <li>
                                     <a href="{{url('admin/agents')}}">
                                         <i class="fas fa-users"></i>Agents</a>
                                 </li>
@@ -210,6 +405,21 @@
                                 <li>
                                     <a href="{{url('admin/agent-sales')}}">
                                         <i class="fas fa-users"></i>Agent Sales</a>
+                                </li>
+                                <li class="has-sub">
+                                    <a class="js-arrow" href="#">
+                                        <i class="zmdi zmdi-settings"></i>Reports</a>
+                                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                        <li>
+                                    <a href="{{url('admin/reports/sales-reports/')}}">Sales Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/reports/wallet-reports/')}}">Wallet Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/reports/agent-reports/')}}">Agents</a>
+                                </li>
+                                    </ul>
                                 </li>
                                 <li class="has-sub active">
                                     <a class="js-arrow" href="#">
@@ -245,6 +455,22 @@
                         </li>
                         <li class="has-sub">
                             <a class="js-arrow" href="#">
+                                <i class="zmdi zmdi-settings"></i>Reports
+                            </a>
+                            <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                <li>
+                                    <a href="{{url('admin/reports/sales-reports/')}}">Sales Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/reports/wallet-reports/')}}">Wallet Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/reports/agent-reports/')}}">Agents</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="has-sub">
+                            <a class="js-arrow" href="#">
                                 <i class="zmdi zmdi-settings"></i>Settings</a>
                             <ul class="list-unstyled navbar__sub-list js-sub-list">
                                 <li>
@@ -270,6 +496,22 @@
                                 <li>
                                     <a href="{{url('admin/agent-sales')}}">
                                         <i class="fas fa-users"></i>Agent Sales</a>
+                                </li>
+                                <li class="has-sub">
+                                    <a class="js-arrow" href="#">
+                                        <i class="zmdi zmdi-settings"></i>Reports
+                                    </a>
+                                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                        <li>
+                                    <a href="{{url('admin/reports/sales-reports/')}}">Sales Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/reports/wallet-reports/')}}">Wallet Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/reports/agent-reports/')}}">Agents</a>
+                                </li>
+                                    </ul>
                                 </li>
                                 <li class="has-sub">
                                     <a class="js-arrow" href="#">
@@ -300,6 +542,22 @@
                                 </li>
                                 <li class="has-sub">
                                     <a class="js-arrow" href="#">
+                                        <i class="zmdi zmdi-settings"></i>Reports
+                                    </a>
+                                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                        <li>
+                                    <a href="{{url('admin/reports/sales-reports/')}}">Sales Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/reports/wallet-reports/')}}">Wallet Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/reports/agent-reports/')}}">Agents</a>
+                                </li>
+                                    </ul>
+                                </li>
+                                <li class="has-sub">
+                                    <a class="js-arrow" href="#">
                                         <i class="zmdi zmdi-settings"></i>Settings</a>
                                     <ul class="list-unstyled navbar__sub-list js-sub-list">
                                         <li>
@@ -324,6 +582,22 @@
                                 <li class="active">
                                     <a href="{{url('admin/agent-sales')}}">
                                         <i class="fas fa-users"></i>Agent Sales</a>
+                                </li>
+                                <li class="has-sub">
+                                    <a class="js-arrow" href="#">
+                                        <i class="zmdi zmdi-settings"></i>Reports
+                                    </a>
+                                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                        <li>
+                                    <a href="{{url('admin/reports/sales-reports/')}}">Sales Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/reports/wallet-reports/')}}">Wallet Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/reports/agent-reports/')}}">Agents</a>
+                                </li>
+                                    </ul>
                                 </li>
                                 <li class="has-sub">
                                     <a class="js-arrow" href="#">
@@ -354,6 +628,22 @@
                                 </li>
                                 <li class="has-sub">
                                     <a class="js-arrow" href="#">
+                                        <i class="zmdi zmdi-settings"></i>Reports
+                                    </a>
+                                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                        <li>
+                                    <a href="{{url('admin/reports/sales-reports/')}}">Sales Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/reports/wallet-reports/')}}">Wallet Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/reports/agent-reports/')}}">Agents</a>
+                                </li>
+                                    </ul>
+                                </li>
+                                <li class="has-sub">
+                                    <a class="js-arrow" href="#">
                                         <i class="zmdi zmdi-settings"></i>Settings</a>
                                     <ul class="list-unstyled navbar__sub-list js-sub-list">
                                         <li>
@@ -361,6 +651,49 @@
                                         </li>                                        
                                     </ul>
                                 </li>
+                        @elseif (\Request::is('admin/reports') || \Request::is('admin/reports/*'))
+                                <li>
+                                    <a class="js-arrow" href="{{url('admin/dashboard')}}">
+                                        <i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                                </li> 
+                                <li>
+                                    <a href="{{url('admin/products')}}">
+                                        <i class="fas fa-chart-bar"></i>Products</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/agents')}}">
+                                        <i class="fas fa-users"></i>Agents</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/agent-sales')}}">
+                                        <i class="fas fa-users"></i>Agent Sales</a>
+                                </li>
+                                <li class="active has-sub">
+                                    <a class="js-arrow" href="#">
+                                        <i class="zmdi zmdi-settings"></i>Reports
+                                    </a>
+                                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                        <li>
+                                    <a href="{{url('admin/reports/sales-reports/')}}">Sales Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/reports/wallet-reports/')}}">Wallet Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/reports/agent-reports/')}}">Agents</a>
+                                </li>
+                                    </ul>
+                                </li>
+                                <li class="has-sub">
+                                    <a class="js-arrow" href="#">
+                                        <i class="zmdi zmdi-settings"></i>Settings</a>
+                                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                        <li>
+                                            <a href="{{url('admin/settings/')}}">Commission Dashboard</a>
+                                        </li>                                        
+                                    </ul>
+                                </li>
+
                         @elseif (\Request::is('admin/settings') || \Request::is('admin/settings/*'))
                                 <li>
                                     <a class="js-arrow" href="{{url('admin/dashboard')}}">
@@ -377,6 +710,22 @@
                                 <li>
                                     <a href="{{url('admin/agent-sales')}}">
                                         <i class="fas fa-users"></i>Agent Sales</a>
+                                </li>
+                                <li class="has-sub">
+                                    <a class="js-arrow" href="#">
+                                        <i class="zmdi zmdi-settings"></i>Reports
+                                    </a>
+                                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                       <li>
+                                    <a href="{{url('admin/reports/sales-reports/')}}">Sales Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/reports/wallet-reports/')}}">Wallet Reports</a>
+                                </li>
+                                <li>
+                                    <a href="{{url('admin/reports/agent-reports/')}}">Agents</a>
+                                </li>
+                                    </ul>
                                 </li>
                                 <li class="has-sub active">
                                     <a class="js-arrow" href="#">

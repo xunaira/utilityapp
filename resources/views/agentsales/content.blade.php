@@ -46,6 +46,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach($sales as $p)
+                                    
                                         <tr class="tr-shadow">
                                             <td>
                                                 {{$p->name}}

@@ -7,7 +7,7 @@
             <div class="row">
                     <div class="col-md-12">
                         <!-- DATA TABLE -->
-                        <h3 class="title-5 m-b-35">Agents Dashboard</h3>
+                        <h3 class="title-5 m-b-35">Companies Dashboard</h3>
                         <div class="table-data__tool">
                             <div class="table-data__tool-left">
                                 <div class="rs-select2--light rs-select2--sm">
@@ -20,46 +20,40 @@
                                 </div>
                             </div>
                             <div class="table-data__tool-right">
-                                <a href="{{url('admin/agents/add')}}">
+                                <a href="{{url('admin/company/add')}}">
                                     <button class="au-btn au-btn-icon au-btn--green au-btn--small">
-                                        <i class="zmdi zmdi-plus"></i>Add Agent
+                                        <i class="zmdi zmdi-plus"></i>Add Company
                                     </button>
-                                </a>
-                                
-                                <a href="{{url('admin/agent-sales/add')}}">
-                                    <button class="au-btn au-btn-icon btn-info au-btn--small">
-                                        <i class="zmdi zmdi-plus"></i>Add Agent Sales
-                                    </button>
-                                </a>
-                               
-                                <a href="{{url('admin/agents/add-balance')}}"><button class="au-btn au-btn-icon au-btn--blue au-btn--small">
-                                    <i class="zmdi zmdi-plus"></i>Add Balance</button>
-                                </a>
-                                    
+                                </a>                                    
                             </div>
                         </div>
                         <div class="table-responsive table-responsive-data2">
                             <table class="table table-data2">
                                 <thead>
                                     <tr>
-                                        <th>Agent Name</th>
-                                        <th>Agent Email</th>                                   
-                                        <th>Operational Area</th>
-                                        <th>Commission (%)</th>
-                                        <th>Supervisor Name</th>
-                                        <th>Created At</th>
-                                        <th>Last Updated</th>
+                                        <th>Company Name</th>
+                                        <th>Company Email</th>                                   
+                                        <th>Address 1</th>
+                                        <th>Address 2</th>
+                                        <th>City</th>
+                                        <th>State</th>
+                                        <th>Country</th>
+                                        <th>Phone Number</th>
+                                        <th>Date Created</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($agents as $p)
+                                    @foreach($company as $p)
                                         <tr class="tr-shadow">
                                             <td style="vertical-align: middle !important;">{{$p->name}}</td>
                                             <td>{{$p->email}}</td>                             
-                                            <td>{{$p->operational_area}}</td>
-                                            <td>{{$p->commission}}</td>
-                                            <td>{{$p->sup}}</td>
+                                            <td>{{$p->address1}}</td>
+                                            <td>{{$p->address2}}</td>
+                                            <td>{{$p->city}}</td>
+                                            <td>{{$p->state}}</td>
+                                            <td>{{$p->country}}</td>
+                                            <td>{{$p->phone}}</td>
                                            
                                             <?php 
                                                 $createdAt = Carbon\Carbon::parse($p->created_at)->format('M d Y');
@@ -67,15 +61,10 @@
                                             <td>{{$createdAt}}</td>                                            
                                             <td>
                                                 <div class="table-data-feature">
-                                                    <a href="../admin/agents/detail/{{$p->agent_id}}" class="pr-4">
-                                                        <button class="item" title="Agent Detail">
-                                                            <i class="fa fa-eye"></i>
-                                                        </button>
-                                                    </a>
-                                                    <a href="../admin/agents/edit/{{$p->agent_id}}" class="pr-4"><button class="item" title="Edit">
+                                                    <a href="../admin/company/edit/{{$p->id}}" class="pr-4"><button class="item" title="Edit">
                                                         <i class="zmdi zmdi-edit"></i>
                                                     </button>
-                                                    <a href="../admin/agents/delete/{{$p->agent_id}}"><button class="item" title="Delete">
+                                                    <a href="../admin/company/delete/{{$p->id}}"><button class="item" title="Delete">
                                                         <i class="zmdi zmdi-delete"></i>
                                                     </button>
                                                 </div>

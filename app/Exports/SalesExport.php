@@ -9,7 +9,7 @@ use DB;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
 
-class AgentExport implements FromCollection, WithHeadings
+class SalesExport implements FromCollection, WithHeadings
 {
     /**
     * @return \Illuminate\Support\Collection
@@ -30,11 +30,13 @@ class AgentExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
+            'Agent Name',
             'Product Name',
+            'Wallet',
             'Sale Value',
-            'Total Funds',
-            'Closing Balance',
-            'Transaction Date'
+            'Remaining Balance',
+            'Date'
+
         ];
     }
 }

@@ -41,7 +41,11 @@ Route::group(['prefix' => 'admin'], function(){
 
 		Route::get('detail/{id}', 'UserController@detail');
 
-		Route::get('export', 'UserController@export');
+		Route::get('export/{id}', 'UserController@export');
+
+		Route::get('agentexport/{id}', 'UserController@agentexport');
+
+		Route::get('bankexport/{id}', 'UserController@bankexport');
 
 	});
 
@@ -123,6 +127,36 @@ Route::group(['prefix' => 'admin'], function(){
 		Route::get('delete_balance/{id}', 'SettingsController@delete_balance');
 
 		Route::post('system', 'SettingsController@add_balance');
+	});
+
+	Route::group(['prefix' => 'reports'], function(){
+		Route::get('sales-reports', 'ReportsController@sales');
+
+		Route::get('sales-export', 'ReportsController@salesexport');
+
+		Route::get('wallet-reports', 'ReportsController@wallet');
+
+		Route::get('wallet-export', 'ReportsController@walletexport');
+
+		Route::get('agent-reports', 'ReportsController@agents');
+
+		Route::get('agent-export', 'ReportsController@agentexport');
+
+	});
+
+	Route::group(['prefix' => 'company'], function(){
+		Route::get('/', 'CompanyController@index');
+
+		Route::get('add', 'CompanyController@add');
+
+		Route::post('store', 'CompanyController@add_company');
+
+		Route::get('edit/{id}', 'CompanyController@edit');
+
+		Route::post('edit', 'CompanyController@edit_company');
+
+		Route::get('delete/{id}', 'CompanyController@destroy');
+
 	});
 
 

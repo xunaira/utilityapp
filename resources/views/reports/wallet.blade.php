@@ -32,6 +32,7 @@
                             <table class="table table-borderless table-striped table-earning">
                                 <thead>
                                     <tr>
+                                        <th>System Balance</th>
                                         <th>Agent Name</th>
                                         <th>Cash in Hand</th>
                                         <th>Cash in Bank</th>
@@ -42,6 +43,12 @@
                                     <tbody>
                                         @foreach($wallet as $a)
                                             <tr>
+                                                <?php 
+                                                    $bal_cash = $a->bal_cash;
+                                                    $bal_hand = $a->bal_hand;
+                                                    $total = $bal_cash + $bal_hand;
+                                                ?>
+                                                <td>&#8358; {{$total}}</td>
                                                 <td>{{$a->name}}</td>
                                                 <td>&#8358; {{$a->cash_in_hand}}</td>
                                                 <td>&#8358; {{$a->cash_bank}}</td>

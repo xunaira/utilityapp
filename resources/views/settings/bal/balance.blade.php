@@ -42,9 +42,11 @@
                             <button type="submit" class="btn btn-primary btn-sm float-right">
                                 <i class="fa fa-dot-circle-o"></i> Add
                             </button>
-                            <button type="reset" class="btn btn-danger btn-sm">
-                                <i class="fa fa-ban"></i> Cancel
-                            </button>
+                            <a href="{{url('admin/settings/balance')}}">
+                                <button type="reset" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-ban"></i> Cancel
+                                </button>
+                            </a>
                         </div>
                     </form>
                     </div>

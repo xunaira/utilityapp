@@ -35,7 +35,7 @@
                                         <label for="text-input" class=" form-control-label">Date</label>
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <input type="date" id="date" name="date" class="form-control" value="{{$bal->date}}">
+                                        <input type="date" id="date" name="date" class="form-control" value="<?php echo date('Y-m-d'); ?>">
                                     </div>
                                 </div>                                         
                         </div>

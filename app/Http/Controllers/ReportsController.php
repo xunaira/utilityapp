@@ -12,6 +12,15 @@ use Excel;
 
 class ReportsController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function sales(){
     	//add balance and sales 
     	$transactions = DB::table('transactions')
@@ -43,7 +52,8 @@ class ReportsController extends Controller
     public function wallet(){
     	$wallet = DB::table('wallet')
     				->join('users', 'users.agent_id', '=', 'wallet.user_id')
-    				->select('users.name', 'wallet.cash_in_hand', 'wallet.cash_bank', 'wallet.total_funds', 'wallet.date')
+                    ->join('balance', 'users.company_id', '=', 'balance.company_id')
+    				->select('users.name', 'wallet.cash_in_hand', 'wallet.cash_bank', 'wallet.total_funds', 'wallet.date', 'balance.cash_bank as bal_cash', 'balance.cash_hand as bal_hand')
     				->get();
     				
     	return view('reports.wallet', ['wallet' => $wallet]);

@@ -31,6 +31,7 @@
 
     <!-- Main CSS-->
     <link href="{{url('admin/css/theme.css')}}" rel="stylesheet" media="all">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
 </head>
 
@@ -82,6 +83,34 @@
     <!-- Main JS-->
     <script src="{{url('admin/js/main.js')}}"></script>
     <script src="{{url('js/modal.js')}}"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script type="text/javascript">
+        toastr.options = {
+             "positionClass": "toast-bottom-right",
+        }
+    </script>
+    <script>
+      @if(Session::has('message'))
+        var type = "{{ Session::get('alert-type', 'info') }}";
+        switch(type){
+            case 'info':
+                toastr.info("{{ Session::get('message') }}");
+                break;
+            
+            case 'warning':
+                toastr.warning("{{ Session::get('message') }}");
+                break;
+
+            case 'success':
+                toastr.success("{{ Session::get('message') }}");
+                break;
+
+            case 'error':
+                toastr.error("{{ Session::get('message') }}");
+                break;
+        }
+      @endif
+    </script>
 
 </body>
 

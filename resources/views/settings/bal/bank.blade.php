@@ -10,12 +10,13 @@
                         <div class="card-header">
                             <h4 class="d-inline">System Balance</h4>
                             <div class="float-right d-inline">
+                                @if($bal < 1)
                                 <a href="{{url('admin/settings/system')}}">
                                     <button class="au-btn au-btn-icon au-btn--green au-btn--small">
                                         <i class="zmdi zmdi-plus"></i>Add System Balance
                                     </button>
                                 </a> 
-                                 
+                                @endif                                 
                             </div>
                         </div>
                         <div class="card-body">
@@ -27,7 +28,6 @@
                                             <th>Cash in Bank (&#8358;)</th>
                                             <th>Total Cash (&#8358;)</th>
                                             <th>Created At</th>
-                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>

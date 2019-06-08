@@ -101,6 +101,8 @@ Route::group(['prefix' => 'admin'], function(){
 		Route::get('balance', 'AgentSalesController@getTotalBalance');
 
 		Route::get('approve/{id}', 'AgentSalesController@approve');
+
+		Route::get('reject/{id}', 'AgentSalesController@reject');
 	});
 
 	Route::group(['prefix' => 'settings'], function(){
@@ -153,9 +155,14 @@ Route::group(['prefix' => 'admin'], function(){
 
 		Route::get('edit/{id}', 'CompanyController@edit');
 
-		Route::post('edit', 'CompanyController@edit_company');
+		Route::post('update', 'CompanyController@update');
 
 		Route::get('delete/{id}', 'CompanyController@destroy');
+
+	});
+
+	Route::group(['prefix' => 'api'], function(){
+		Route::get('monthlysales', 'HomeController@getSalesByMonth');
 
 	});
 

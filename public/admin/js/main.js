@@ -400,35 +400,59 @@
     const brandProduct2 = 'rgba(0,181,233,0.2)'
     const brandService2 = 'rgba(0,173,95,0.2)'
 
-    var data3 = [52, 60, 55, 50, 65, 80, 57, 70, 105, 115]
-    var data4 = [102, 70, 80, 100, 56, 53, 80, 75, 65, 90]
+    var months = new Array();
+    var sales = new Array();
+
+    var n, p;
+    $.ajax({
+        type: 'GET',
+        url: '../admin/api/monthlysales',
+        dataType: 'json',
+        success: function (data) { 
+          for(var m in data){
+            for(var i in data[m]){
+              n = data[m][0]; 
+              p = data[m][1];  
+            }
+            console.log(n);
+            // months.push(n);
+            // sales.push(p);
+          
+          }
+    var max = Math.max.apply(Math,p);
+    max = max + 200;
+    var total = 0;
+    var c = 0;
+    for(var i = 0; i < p.length; i++) {
+      if(p[i]!=0){
+        total += p[i];        
+        c++;
+      }
+
+    }
+
+    var avg = total / c;
+    avg = 500 * Math.round(avg/500);
+    var data3 = p;
+    var data4 = [n];
 
     var ctx = document.getElementById("recent-rep2-chart");
     if (ctx) {
       ctx.height = 230;
+
       var myChart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', ''],
+          labels: n,
           datasets: [
             {
-              label: 'My First dataset',
+              label: 'Sales',
               backgroundColor: brandService2,
               borderColor: bd_brandService2,
               pointHoverBackgroundColor: '#fff',
               borderWidth: 0,
               data: data3
-
             },
-            {
-              label: 'My Second dataset',
-              backgroundColor: brandProduct2,
-              borderColor: bd_brandProduct2,
-              pointHoverBackgroundColor: '#fff',
-              borderWidth: 0,
-              data: data4
-
-            }
           ]
         },
         options: {
@@ -452,8 +476,8 @@
               ticks: {
                 beginAtZero: true,
                 maxTicksLimit: 5,
-                stepSize: 50,
-                max: 150,
+                stepSize: avg,
+                max: max,
                 fontFamily: "Poppins",
                 fontSize: 12
               },
@@ -479,7 +503,73 @@
 
         }
       });
+
+
+
     }
+
+
+        }
+      });
+
+
+
+
+
+    var n1, p1;
+    $.ajax({
+        type: 'GET',
+        url: '../admin/api/yearlysales',
+        dataType: 'json',
+        success: function (data) { 
+          for(var m in data){
+
+            for(var i in data[m]){
+              n1 = data[m][0];
+              p1 = data[m][1];
+            }
+          }
+    var data3 = p1;
+    var data4 = [n];
+    var ctx = document.getElementById("recent-rep2-donut-chart");
+    if (ctx) {
+      ctx.height = 230;
+      var bgcolors = getRandomColor();
+      var myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: n1,
+          datasets: [
+            {
+              label: 'Sales',
+              backgroundColor: bgcolors,
+              borderColor: bgcolors,
+              pointHoverBackgroundColor: bgcolors,
+              borderWidth: 0,
+              data: data3
+            },
+          ]
+        },
+      });
+
+
+
+    }
+
+
+        }
+      });
+
+
+    console.log(months);
+/*    var data3 = [50, 50, 50, 50, 50, 50, 50, 50, 50, 50];
+    var data4 = [102, 70, 80, 100, 56, 53, 80, 75, 65, 90];
+
+    var ctx = document.getElementById("recent-rep2-chart");
+    if (ctx) {
+      ctx.height = 230;
+
+    }*/
 
   } catch (error) {
     console.log(error);
@@ -576,47 +666,57 @@
     console.log(error);
   }
 
-  try {
-    //WidgetChart 5
-    var ctx = document.getElementById("widgetChart5");
-    if (ctx) {
-      ctx.height = 220;
-      var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-          datasets: [
-            {
-              label: "My First dataset",
-              data: [78, 81, 80, 64, 65, 80, 70, 75, 67, 85, 66, 68],
-              borderColor: "transparent",
-              borderWidth: "0",
-              backgroundColor: "#ccc",
-            }
-          ]
-        },
-        options: {
-          maintainAspectRatio: true,
-          legend: {
-            display: false
-          },
-          scales: {
-            xAxes: [{
-              display: false,
-              categoryPercentage: 1,
-              barPercentage: 0.65
-            }],
-            yAxes: [{
-              display: false
-            }]
-          }
-        }
-      });
-    }
+  // try {
+  //   //WidgetChart 5
+    
+  //   var months = new Array();
+  //   var sales = new Array();
+  //     $.ajax({
+  //       type: 'GET',
+  //       url: '../admin/api/monthlysales',
+  //       dataType: 'json', //tell jQuery to parse received data as JSON before passing it onto successCallback
+  //       success: function (data) { 
+  //         var d = data.monthly;
+  //        // console.log(d);
+  //         for(var i in d){
+  //           var m = d[0][i];
+  //           console.log("d i " +m);
+  //           months.push(d[i].month);
+  //         }
+  //         console.log(months);
 
-  } catch (error) {
-    console.log(error);
-  }
+  //         for(var k in d){
+  //           sales.push(d[k].sales);
+  //         }
+
+  //         console.log(sales);
+        
+  //       var ctx = document.getElementById("widgetChart5");
+  //       if(ctx){
+  //         ctx.height = 200;
+  //         var myChart = new Chart(ctx, {
+  //             type: 'bar',
+  //             data: {
+  //               label: months,
+  //               datasets: [
+  //                   {
+  //                     label: "Sales",
+  //                     data: sales,
+  //                     borderColor: "transparent",
+  //                     borderWidth: "0",
+  //                     backgroundColor: "#ccc",
+  //                   }
+  //                 ]
+  //             }
+  //         });
+  //       }
+  //     }
+  //     });
+    
+
+  // } catch (error) {
+  //   console.log(error);
+  // }
 
   try {
 
@@ -1668,3 +1768,11 @@
   }
 
 })(jQuery);
+
+
+ function getRandomColor() {
+        colors = ["#0074D9", "#FF4136", "#2ECC40", "#FF851B", "#7FDBFF", 
+        "#B10DC9", "#FFDC00", "#001f3f", "#39CCCC", "#01FF70", "#85144b", 
+        "#F012BE", "#3D9970", "#111111", "#beff00"];
+        return colors;
+}

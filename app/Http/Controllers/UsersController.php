@@ -8,9 +8,19 @@ use App\User;
 use Illuminate\Support\Facades\Hash;
 use App\agents_migration;
 use DB;
+use Auth;
 
 class UsersController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
      /**
      * Display a listing of the resource.
      *
@@ -18,8 +28,8 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $agents = User::where('role_id', 1)->get();
-        $sup = User::where('role_id', 2)->get();
+        $agents = User::where([['role_id', 1], ['company_id', Auth::user()->company_id]])->orderBy('created_at', 'DESC')->get();
+        $sup = User::where([['role_id', 2], ['company_id', Auth::user()->company_id]])->orderBy('created_at', 'DESC')->get();
         return view('roles.content', ['agents' => $agents, 'sup' => $sup]);
     }
 
@@ -59,6 +69,7 @@ class UsersController extends Controller
         $data->password = Hash::make($_POST['password']);
         $data->email = $_POST['email'];
         $data->role_id = $request->get('role');
+        $data->company_id = Auth::user()->company_id;
 
         if ($data->save()) {
             if($data->role_id == 2){

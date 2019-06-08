@@ -88,9 +88,19 @@
                         </div>
                         <div class="card-body card-block">
                             <div class="p-2">
-                                <div class="form-control-label"><h4 class="mr-3 d-inline">Total Balance: </h4><span class="d-inline" id="total_balance"></span></div>
+                                <div class="form-control-label">
+                                    <h4 class="mr-3 d-inline">Total Balance: </h4>
+                                    <span class="d-inline">&#8358</span>
+                                    <span class="d-inline" id="total_balance">
+                                         {{$bal}}
+                                    </span>
+                                </div>
                                 <input type="number" id="total" class="d-none">
                             </div>  
+                            <div class="p-2">
+                                <div class="form-control-label"><h4 class="mr-3 d-inline">Commission: </h4><span class="d-inline" id="commission"></span></div>
+                                <input type="number" id="comm" class="d-none">
+                            </div> 
                             <div class="p-2">
                                 <div class="form-control-label"><h4 class="mr-3 d-inline">Sales: </h4><span class="d-inline" id="sales_balance"></span></div>
                             </div> 
@@ -116,12 +126,15 @@ $('#submit').attr('disabled', 'true');
         var sales_token = '{{csrf_token()}}';
         $.ajax({
             url:'{{route("get_product")}}',
-            method:"Post",
-            data:{product_id:product_id,_token:sales_token},
+            method:"GET",
+            data:{
+                product_id:product_id, 
+                _token:sales_token
+            },
             datatype:"text",
             success:function(data) {
-                console.log(data);
-                   $('#comission').val(data.comission);
+                console.log("Data received " + data.comission);
+                $('#commission').text(data.comission + "%");
             }
         });
     });
@@ -130,13 +143,15 @@ $('#submit').attr('disabled', 'true');
         var sale = $('#sales_values2').val();
         $('#sales_balance').html(icon + " " + sale);
 
-        var total = $('#total').text();
+        var total = $('#total_balance').text();
         console.log("total" + total);
 
         var rem = total - sale;
 
         $('#rem_balance').html(icon + " " + rem);
         $('.rem_balance').html(rem);
+
+        $('#submit').removeAttr('disabled');
 
 
    })
@@ -159,7 +174,7 @@ $('#submit').attr('disabled', 'true');
                     $('#submit').removeAttr('disabled');
                     
                     var icon = "<span>&#8358</span>";
-                    $('div #total_balance').html(icon + " " + data.funds[0].total_funds);
+                    $('div #total_balance').html(data.funds[0].total_funds);
                     $('#total').text(data.funds[0].total_funds);
 
 

@@ -13,6 +13,15 @@ use Carbon\Carbon;
 
 class AgentSalesController extends Controller
 {
+  /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -20,12 +29,33 @@ class AgentSalesController extends Controller
      */
     public function index()
     {
-        $sales = DB::table('add_sales')
+        $all = DB::table('add_sales')
             ->join('products', 'add_sales.product_id', '=', 'products.id')
             ->join('users', 'add_sales.agent', '=', 'users.agent_id')
             ->select('add_sales.*', 'products.product_name', 'users.name')
             ->get();
-        return view("agentsales.content",compact('sales'));
+
+        $pending = DB::table('add_sales')
+            ->join('products', 'add_sales.product_id', '=', 'products.id')
+            ->join('users', 'add_sales.agent', '=', 'users.agent_id')
+            ->select('add_sales.*', 'products.product_name', 'users.name')
+            ->where('status', 'Pending Approval')
+            ->get();
+        
+        $approved = DB::table('add_sales')
+            ->join('products', 'add_sales.product_id', '=', 'products.id')
+            ->join('users', 'add_sales.agent', '=', 'users.agent_id')
+            ->select('add_sales.*', 'products.product_name', 'users.name')
+            ->where('status', 'Approved')
+            ->get();
+
+        $rejected = DB::table('add_sales')
+            ->join('products', 'add_sales.product_id', '=', 'products.id')
+            ->join('users', 'add_sales.agent', '=', 'users.agent_id')
+            ->select('add_sales.*', 'products.product_name', 'users.name')
+            ->where('status', 'Rejected')
+            ->get();
+        return view("agentsales.content",compact('pending', 'all', 'approved', 'rejected'));
     }
 
     /**
@@ -35,14 +65,15 @@ class AgentSalesController extends Controller
      */
     public function create()
     {
-        $products = Product::all();
+
+        $products = Product::where('company_id', Auth::user()->company_id)->get();
         $agents = DB::table('users')
             ->join('agents', 'users.agent_id', '=', 'agents.id')
             ->join('wallet', 'agents.id', '=', 'wallet.user_id')
             ->select('users.name', 'users.username', 'users.email','agents.*', 'wallet.*', 'users.agent_id')
-            ->where('wallet.date', Carbon::now()->toDateString())
+            ->where([['wallet.date', Carbon::now()->toDateString()], ['users.company_id', Auth::user()->company_id]])
             ->get();
-            
+
         return view("agentsales.add",['products' => $products, 'agents' => $agents]);
     } 
 
@@ -69,9 +100,11 @@ class AgentSalesController extends Controller
                 $data =new AgentSales;
                 $data->fill($request->all());
                 if ($data->save()) {
-                    return back()->with('success','Sale added successfully.');
+                    return redirect("admin/agent-sales")->with(array('message' => 'Your sale has been submitted successfully. The sale will be visible when admin has approved it.', 
+                          'alert-type' => 'success'));
                 } else {
-                    return back()->with('error','Sale Not updated');
+                    return redirect("admin/agent-sales")->with(array('message' => 'There was a problem adding this sale. Contact IT Administrator', 
+                      'alert-type' => 'error'));
                 }
 
             }
@@ -86,10 +119,12 @@ class AgentSalesController extends Controller
      */
     public function productGet(Request $request)
     {
-        $id=$request->product_id;
-        $getProduct=Product::where('id', $id)->first();
-       
-        return response()->json(['comission'=>$getProduct->comm_self]);
+       $id = $request->product_id;
+
+        $getProduct = Product::where([['id', $id], ['company_id', Auth::user()->company_id]])->select('comm_self')->first();
+
+        
+        return response()->json(['comission' => $getProduct->comm_self]);
     }
 
     /**
@@ -144,10 +179,12 @@ class AgentSalesController extends Controller
             $data = AgentSales::find($request->get('id'));
             $data->fill($request->all());
             if ($data->save()) {
-                return back()->with('success','Sale updated successfully.');
-            } else {
-                return back()->with('error','Sale Not updated');
-            }
+                    return redirect("admin/agent-sales")->with(array('message' => 'Your sale has been submitted successfully. The sale will be visible when admin has approved it.', 
+                          'alert-type' => 'success'));
+                } else {
+                    return redirect("admin/agent-sales")->with(array('message' => 'There was a problem updating this sale. Contact IT Administrator', 
+                      'alert-type' => 'error'));
+                }
         }
     }
 
@@ -164,14 +201,19 @@ class AgentSalesController extends Controller
         if(!is_null($sales)) {
 
             $sales->delete();
-            return back()->with('success','Sale Deleted successfully.');
-        } else {
-            return back()->with('error','Sale Not Deleted');
-        }
+            if ($data->save()) {
+                    return redirect("admin/agent-sales")->with(array('message' => 'Your sale has been deleted successfully.', 
+                          'alert-type' => 'success'));
+                } else {
+                    return redirect("admin/agent-sales")->with(array('message' => 'There was a problem deleting this sale. Contact IT Administrator', 
+                      'alert-type' => 'error'));
+                }
+            }
     }
 
     public function getTotalBalance(Request $r){
         $id = $r->get('id');
+      
         $today = Carbon::now()->toDateString();
         
         $b = Wallet::where([['user_id', $id], ['date', ">=", $today]])->select('total_funds')->get();
@@ -188,8 +230,11 @@ class AgentSalesController extends Controller
         if($sale->save()){
             //deduct the sale cost from wallet 
             $new_sale = AgentSales::where('id', $id)->select('sale_value', 'agent')->first();
-            $wallet = Wallet::where([['user_id', $new_sale->agent], ['date', '>=', $today]])->select('total_funds')->first();
-            $funds = $wallet->total_funds;
+            //$wallet = Wallet::where([['user_id', $new_sale->agent], ['date', '>=', $today]])->select('total_funds')->first();
+            $wallet = Transactions::where([['agent_id', $new_sale->agent], ['date', '>=', $today]])->select('closing_balance')->orderBy('date', 'DESC')->first();
+            dd($wallet);
+            
+            $funds = $wallet->closing_balance;
             $salevalue = $new_sale->sale_value;
             $total = $funds - $salevalue;
 
@@ -204,10 +249,28 @@ class AgentSalesController extends Controller
             $a_s->closing_balance = $total;
             
             if($a_s->save()){
-                return back()->with('success','Sale Approved Successfully');
-            } else {
-                return back()->with('error','Sale Not Approved');
-            }
+                    return redirect("admin/agent-sales")->with(array('message' => 'Sale has been approved.', 
+                          'alert-type' => 'success'));
+                } else {
+                    return redirect("admin/agent-sales")->with(array('message' => 'There was a problem approving this sale. Contact IT Administrator', 
+                      'alert-type' => 'error'));
+                }
         }         
+    }
+
+    public function reject($id){
+        $sales_id = $id;
+        $today = Carbon::now()->toDateString();
+        $sale = AgentSales::find($id);
+        $sale->status = "Rejected";
+
+        if($sale->save()){
+             return redirect("admin/agent-sales")->with(array('message' => 'Your sale has been rejected successfully.', 
+                          'alert-type' => 'success'));
+        }else{
+            return redirect("admin/agent-sales")->with(array('message' => 'There was a problem deleting this sale. Contact IT Administrator', 
+                      'alert-type' => 'error'));
+        }
+              
     }
 }

@@ -64,9 +64,11 @@
                             <button type="submit" class="btn btn-primary btn-sm float-right">
                                 <i class="fa fa-dot-circle-o"></i> Submit
                             </button>
-                            <button type="reset" class="btn btn-danger btn-sm">
-                                <i class="fa fa-ban"></i> Cancel
-                            </button>
+                            <a href="{{url('admin/users')}}">
+                                <button type="reset" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-ban"></i> Cancel
+                                </button>
+                            </a>
                         </div>
                     </form>
                     </div>

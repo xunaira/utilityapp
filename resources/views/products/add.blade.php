@@ -23,14 +23,6 @@
                                 </div>
                                 <div class="row form-group">
                                     <div class="col col-md-4">
-                                        <label for="text-input" class=" form-control-label">Company Name</label>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" id="company_name" name="company_name" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="row form-group">
-                                    <div class="col col-md-4">
                                         <label for="text-input" class=" form-control-label">Commission - Funded Agent</label>
                                     </div>
                                     <div class="col-12 col-md-6">
@@ -59,9 +51,11 @@
                             <button type="submit" class="btn btn-primary btn-sm float-right">
                                 <i class="fa fa-dot-circle-o"></i> Submit
                             </button>
-                            <button type="reset" class="btn btn-danger btn-sm">
-                                <i class="fa fa-ban"></i> Cancel
-                            </button>
+                            <a href="{{url('admin/products')}}">
+                                <button type="reset" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-ban"></i> Cancel
+                                </button>
+                            </a>
                         </div>
                     </form>
                     </div>

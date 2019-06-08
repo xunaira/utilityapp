@@ -91,18 +91,6 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane fade show" id="pills-f" role="tabpanel" aria-labelledby="custom-nav-home-tab">
-                                    <div class="table-data__tool">
-                                        <div class="table-data__tool-left">
-                                            <div class="rs-select2--light rs-select2--sm">
-                                                <select class="js-select2" name="time">
-                                                    <option selected="selected">Today</option>
-                                                    <option value="">3 Days</option>
-                                                    <option value="">1 Week</option>
-                                                </select>
-                                                <div class="dropDownSelect2"></div>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="table-responsive table-responsive-data2">
                                         <table class="table table-data2">
                                             <thead>

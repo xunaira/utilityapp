@@ -23,22 +23,6 @@
                                 </div>
                                 <div class="row form-group">
                                     <div class="col col-md-4">
-                                        <label for="text-input" class=" form-control-label">Company Name</label>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" id="company_name" name="company_name" class="form-control" value="{{$product->company_name}}">
-                                    </div>
-                                </div>
-                                <div class="row form-group">
-                                    <div class="col col-md-4">
-                                        <label for="text-input" class=" form-control-label">Commission - Company</label>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" id="comm_company" name="comm_cmp" class="form-control" value="{{$product->comm_cmp}}">
-                                    </div>
-                                </div>
-                                <div class="row form-group">
-                                    <div class="col col-md-4">
                                         <label for="text-input" class=" form-control-label">Commission - Self</label>
                                     </div>
                                     <div class="col-12 col-md-6">
@@ -47,10 +31,18 @@
                                 </div>  
                                 <div class="row form-group">
                                     <div class="col col-md-4">
+                                        <label for="text-input" class=" form-control-label">Commission - Self Funded Agent</label>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <input type="text" id="comm_self_funded" name="comm_self_funded" class="form-control" value="{{$product->comm_self_funded}}">
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-4">
                                         <label for="text-input" class=" form-control-label">Commission - Funded Agent</label>
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <input type="text" id="comm_funded" name="comm_funded" class="form-control">
+                                        <input type="text" id="comm_funded" name="comm_funded" class="form-control" value="{{$product->comm_funded}}">
                                     </div>
                                 </div>
                                                  
@@ -59,9 +51,11 @@
                             <button type="submit" class="btn btn-primary btn-sm float-right">
                                 <i class="fa fa-dot-circle-o"></i> Submit
                             </button>
-                            <button type="reset" class="btn btn-danger btn-sm">
-                                <i class="fa fa-ban"></i> Cancel
-                            </button>
+                            <a href="{{url('admin/products')}}">
+                                <button type="reset" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-ban"></i> Cancel
+                                </button>
+                            </a>
                         </div>
                     </form>
                     </div>

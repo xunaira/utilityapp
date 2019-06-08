@@ -4,8 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Product;
+use Auth;
 class ProductController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +25,7 @@ class ProductController extends Controller
     public function index()
     {
         //
-        $product = Product::all();
+        $product = Product::where('company_id', Auth::user()->company_id)->get();
         return view('products.index', compact('product'));
     }
 
@@ -40,15 +50,18 @@ class ProductController extends Controller
     {
         $data = new Product;
         $data->product_name = $_POST['product_name'];
-        $data->company_name = $_POST['company_name'];
         $data->comm_self_funded = $_POST['comm_self_funded'];
         $data->comm_funded = $_POST['comm_funded'];
         $data->comm_self = $_POST['comm_self'];
+        $data->company_id = Auth::user()->company_id;
 
         if ($data->save()) {
-            return redirect("admin/products")->with('success','Product added successfully.');
+            return redirect("admin/products")->with(
+                array('message' => 'Product added successfully.', 
+                      'alert-type' => 'success'));
         } else {
-            return redirect("admin/products")->with('error','Product Not Added');
+            return redirect("admin/products")->with(array('message' => 'There was a problem adding your product', 
+                      'alert-type' => 'error'));
         }
 
     }
@@ -85,16 +98,21 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-
-
         $data = Product::find($id);
-        $data->fill($request->all());
+        $data->product_name = $_POST['product_name'];
+        $data->comm_self_funded = $_POST['comm_self_funded'];
+        $data->comm_funded = $_POST['comm_funded'];
+        $data->comm_self = $_POST['comm_self'];
+        $data->company_id = Auth::user()->company_id;
+
         if ($data->save()) {
-         return redirect("admin/products")->with('success','Product updated successfully.');
-     } else {
-        return redirect("admin/products")->with('error','Product Not updated');
-    }
+            return redirect("admin/products")->with(
+                array('message' => 'Product updated successfully.', 
+                      'alert-type' => 'success'));
+        } else {
+            return redirect("admin/products")->with(array('message' => 'There was a problem updating your product', 
+                      'alert-type' => 'error'));
+        }
 
 }
 
@@ -111,9 +129,12 @@ class ProductController extends Controller
         if(!is_null($product)) {
 
             $product->delete();
-            return back()->with('success','Product Deleted successfully.');
+            return redirect("admin/products")->with(
+                array('message' => 'Product deleted successfully.', 
+                      'alert-type' => 'success'));
         } else {
-            return back()->with('error','Product Not Deleted');
+            return redirect("admin/products")->with(array('message' => 'There was a problem deleting your product', 
+                      'alert-type' => 'error'));
         }
 
     }

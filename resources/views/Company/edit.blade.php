@@ -8,10 +8,10 @@
                 <div class="col-lg-8 mx-auto d-block">
                     <div class="card">
                         <div class="card-header">
-                            <strong>Add Company</strong>
+                            <strong>Edit Company</strong>
                         </div>
                         <div class="card-body card-block">
-                            <form action="../../admin/company/store" method="post" class="form-horizontal" enctype="multipart/form-data">
+                            <form action="{{url('admin/company/update')}}" method="post" class="form-horizontal" enctype="multipart/form-data">
                                 @csrf
                                 @foreach($company as $c)
                                 <div class="row form-group">
@@ -20,16 +20,9 @@
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <input type="text" id="name" name="name" class="form-control" value="{{$c->name}}">
+                                        <input type="text" id="id" name="id" class="form-control d-none" value="{{$c->id}}">
                                     </div>
-                                </div>
-                                <div class="row form-group">
-                                    <div class="col col-md-4">
-                                        <label for="text-input" class=" form-control-label">Company Email</label>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <input type="email" id="email" name="email" class="form-control" value="{{$c->email}}">
-                                    </div>
-                                </div>                                
+                                </div>                             
                                 <div class="row form-group">
                                     <div class="col col-md-4">
                                         <label for="text-input" class=" form-control-label">Company Phone Number</label>
@@ -78,23 +71,6 @@
                                         <input type="text" id="country" name="country" class="form-control" value="{{$c->country}}">
                                     </div>
                                 </div> 
-                                <div class="row form-group">
-                                    <div class="col col-md-4">
-                                        <label for="text-input" class=" form-control-label">Role</label>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <select class="form-control" name="role" id="role">
-                                            <option value="">- SELECT ROLE - </option>
-                                            @foreach($roles as $role)
-                                                @if($role->id == $c->role_id)
-                                                    <option value="{{$c->role_id}}" style="text-transform: capitalize;" selected>{{$role->name}}</option> 
-                                                @else
-                                                    <option value="{{$role->id}}" style="text-transform: capitalize;">{{$role->name}}</option> 
-                                                @endif                                               
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>  
                             @endforeach                                                  
                         </div>
                         <div class="card-footer">

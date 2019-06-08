@@ -8,9 +8,19 @@ use App\Settings;
 use Carbon\Carbon;
 use App\Wallet;
 use App\Balance;
+use Auth;
 
 class SettingsController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 	public function index(){
 		$comm = Settings::where('type', 'self funded agents')->get();
 		$funded = Settings::where('type', 'funded agents')->get();
@@ -89,9 +99,10 @@ class SettingsController extends Controller
     }
 
     public function view_balance(){
-        $balance = Balance::all();
-
-        return view('settings.bal.bank', ['balance' => $balance]);
+        $balance = Balance::where('company_id', Auth::user()->company_id)->get();
+        $bal = Balance::where('date', Carbon::now()->toDateString())->count();
+        
+        return view('settings.bal.bank', ['balance' => $balance, 'bal' => $bal]);
     }
 
     public function edit_balance($id){
@@ -124,11 +135,15 @@ class SettingsController extends Controller
         $b->cash_bank = $cash_bank;
         $b->date = $date;
         $b->created_at = Carbon::now();
+        $b->user_id = Auth::user()->id;
+        $b->company_id = Auth::user()->company_id;
+        $b->total = $cash_in_hand + $cash_bank;
+        $b->rem = $cash_in_hand + $cash_bank;
 
         if($b->save()){
-            return back()->with('success','System wide balance added successfully');
+            return redirect('admin/settings/balance')->with('success','System wide balance added successfully');
         }else{
-            return back()->with('error','Balance could not be added');
+            return redirect('admin/settings/balance')->with('error','Balance could not be added');
         }        
     }
 

@@ -73,7 +73,7 @@ class AgentSalesController extends Controller
             ->select('users.name', 'users.username', 'users.email','agents.*', 'wallet.*', 'users.agent_id')
             ->where([['wallet.date', Carbon::now()->toDateString()], ['users.company_id', Auth::user()->company_id]])
             ->get();
-
+        
         return view("agentsales.add",['products' => $products, 'agents' => $agents]);
     } 
 
@@ -91,14 +91,25 @@ class AgentSalesController extends Controller
         'date' => 'required',
         ]);
 
-        $id = $request->get('agent');
+        if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2){          
+          $id = $request->get('agent');
+        }elseif(Auth::user()->role_id == 3){
+          $id = Auth::user()->agent_id;
+        }
         
         if($validatedData) {
             //check if wallet exists for this agent
             $wallet = Wallet::where([['user_id', $id], ['date', Carbon::now()->toDateString()]])->get();
+
             if(!empty($wallet)){
                 $data =new AgentSales;
-                $data->fill($request->all());
+                $data->sale_value = $request->get('sale_value');
+                $data->product_id = $request->get('product_id');
+                $data->status = "Pending Approval";
+                $data->agent = $id;
+                $data->date = Carbon::now()->toDateString();
+                $data->created_at = Carbon::now();
+                $data->updated_at = Carbon::now();
                 if ($data->save()) {
                     return redirect("admin/agent-sales")->with(array('message' => 'Your sale has been submitted successfully. The sale will be visible when admin has approved it.', 
                           'alert-type' => 'success'));
@@ -212,11 +223,13 @@ class AgentSalesController extends Controller
     }
 
     public function getTotalBalance(Request $r){
-        $id = $r->get('id');
-      
-        $today = Carbon::now()->toDateString();
-        
+        $id = $r->get('id');      
+        $today = Carbon::now()->toDateString();        
         $b = Wallet::where([['user_id', $id], ['date', ">=", $today]])->select('total_funds')->get();
+
+        //check if sale is already added for today or not 
+        $sale = AgentSales::where([['agent', "5"], ['date', ">=", $today]])->get();
+        dd($sale);
 
         return response()->json(['funds'=>$b]);
 
@@ -226,36 +239,84 @@ class AgentSalesController extends Controller
         $sales_id = $id;
         $today = Carbon::now()->toDateString();
         $sale = AgentSales::find($id);
-        $sale->status = "Approved";
-        if($sale->save()){
-            //deduct the sale cost from wallet 
-            $new_sale = AgentSales::where('id', $id)->select('sale_value', 'agent')->first();
-            //$wallet = Wallet::where([['user_id', $new_sale->agent], ['date', '>=', $today]])->select('total_funds')->first();
-            $wallet = Transactions::where([['agent_id', $new_sale->agent], ['date', '>=', $today]])->select('closing_balance')->orderBy('date', 'DESC')->first();
-            dd($wallet);
-            
-            $funds = $wallet->closing_balance;
-            $salevalue = $new_sale->sale_value;
-            $total = $funds - $salevalue;
+        $agent_id = $sale->agent;
+        $wallet = Wallet::where([['user_id', $agent_id], ['date', $today]])->orderBy('date', 'DESC')->first();
+        $wallet_id = $wallet->id;
+        $w = Transactions::where('wallet_id', $wallet_id)->orderBy('date', 'DESC')->first();
 
-            $w_id =  Wallet::where([['user_id', $new_sale->agent], ['date', '>=', $today]])->select('id')->first();
-            
-            //insert transaction of the sale 
-            $a_s = new Transactions;
-            $a_s->wallet_id = $w_id->id;
-            $a_s->sales_id = $sales_id;
-            $a_s->agent_id = $new_sale->agent;
-            $a_s->date = Carbon::now()->toDateString();
-            $a_s->closing_balance = $total;
-            
-            if($a_s->save()){
+        if(empty($w)){
+            //create Transaction
+            $t = new Transactions;
+            $t->sales_id = $id;
+            $t->wallet_id = $wallet_id;
+            $t->agent_id = $agent_id;
+            $t->date = $today;
+            $funds = $wallet->total_funds;
+            $t->closing_balance = $funds - $sale->sale_value;
+
+             if($t->save()){
+                $s = AgentSales::find($id);
+                $s->status = "Approved";
+                if($s->save()){
                     return redirect("admin/agent-sales")->with(array('message' => 'Sale has been approved.', 
                           'alert-type' => 'success'));
-                } else {
+                }else{
                     return redirect("admin/agent-sales")->with(array('message' => 'There was a problem approving this sale. Contact IT Administrator', 
-                      'alert-type' => 'error'));
+                          'alert-type' => 'error'));
                 }
-        }         
+
+                return redirect("admin/agent-sales")->with(array('message' => 'There was a problem approving this sale. Contact IT Administrator', 
+                          'alert-type' => 'error'));
+                
+            }else{
+                return redirect("admin/agent-sales")->with(array('message' => 'There was a problem approving this sale. Contact IT Administrator', 
+                          'alert-type' => 'error'));
+            }
+        }else{
+            $remaining = $w->closing_balance;
+            $t = new Transactions;
+            $t->sales_id = $id;
+            $t->wallet_id = $wallet_id;
+            $t->agent_id = $agent_id;
+            $t->date = $today;
+            $funds = $wallet->total_funds;
+            $t->closing_balance = $remaining - $sale->sale_value;
+
+            if($t->save()){
+                $s = AgentSales::find($id);
+                $s->status = "Approved";
+                if($s->save()){
+                    return redirect("admin/agent-sales")->with(array('message' => 'Sale has been approved.', 
+                          'alert-type' => 'success'));
+                }else{
+                    return redirect("admin/agent-sales")->with(array('message' => 'There was a problem approving this sale. Contact IT Administrator', 
+                          'alert-type' => 'error'));
+                }
+
+                return redirect("admin/agent-sales")->with(array('message' => 'There was a problem approving this sale. Contact IT Administrator', 
+                          'alert-type' => 'error'));
+                
+            }else{
+                return redirect("admin/agent-sales")->with(array('message' => 'There was a problem approving this sale. Contact IT Administrator', 
+                          'alert-type' => 'error'));
+            }
+
+
+        }
+
+        
+
+
+        //$sale->status = "Approved";
+        if($sale->save()){
+            //if the admin wants to approve this transaction
+            //create a new transaction 
+            //wallet_id, sale_id, agent_id 
+
+
+        }
+            
+                
     }
 
     public function reject($id){

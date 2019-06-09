@@ -5,8 +5,8 @@
                 <div class="login-wrap">
                     <div class="login-content">
                         <div class="login-logo">
-                            <a href="#">
-                                <img src="images/icon/logo.png" alt="CoolAdmin">
+                            <a href="/">
+                                <h3>IQI POWER APP</h3>
                             </a>
                         </div>
                         <div class="login-form">

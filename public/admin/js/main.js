@@ -1,4 +1,3 @@
-
 (function ($) {
   // USE STRICT
   "use strict";
@@ -332,61 +331,76 @@
     }
 
     // Percent Chart
-    var ctx = document.getElementById("percent-chart");
-    if (ctx) {
-      ctx.height = 280;
-      var myChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          datasets: [
-            {
-              label: "My First dataset",
-              data: [60, 40],
-              backgroundColor: [
-                '#00b5e9',
-                '#fa4251'
-              ],
-              hoverBackgroundColor: [
-                '#00b5e9',
-                '#fa4251'
-              ],
-              borderWidth: [
-                0, 0
-              ],
-              hoverBorderColor: [
-                'transparent',
-                'transparent'
-              ]
-            }
-          ],
-          labels: [
-            'Products',
-            'Services'
-          ]
-        },
-        options: {
-          maintainAspectRatio: false,
-          responsive: true,
-          cutoutPercentage: 55,
-          animation: {
-            animateScale: true,
-            animateRotate: true
-          },
-          legend: {
-            display: false
-          },
-          tooltips: {
-            titleFontFamily: "Poppins",
-            xPadding: 15,
-            yPadding: 10,
-            caretPadding: 0,
-            bodyFontSize: 16
-          }
-        }
-      });
-    }
+  try{
+  	var n1, p1;
+      $.ajax({
+          type: 'GET',
+          url: '../admin/api/yearlysales',
+          dataType: 'json',
+          success: function (data) { 
+            for(var m in data){
 
-  } catch (error) {
+              for(var i in data[m]){
+                n1 = data[m][0];
+                p1 = data[m][1];
+              }
+            }
+
+      var data3 = p1;
+      var data4 = [n];
+      var ctx = document.getElementById("percent-chart");
+      if (ctx) {
+        ctx.height = 280;
+        var myChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            datasets: [
+              {
+                label: "Sales",
+                data: data3,
+                backgroundColor: [
+                  '#00b5e9',
+                  '#fa4251'
+                ],
+                hoverBackgroundColor: [
+                  '#00b5e9',
+                  '#fa4251'
+                ],
+                borderWidth: [
+                  0, 0
+                ],
+                hoverBorderColor: [
+                  'transparent',
+                  'transparent'
+                ]
+              }
+            ],
+            labels: n1,
+          },
+          options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            cutoutPercentage: 55,
+            animation: {
+              animateScale: true,
+              animateRotate: true
+            },
+            legend: {
+              display: false
+            },
+            tooltips: {
+              titleFontFamily: "Poppins",
+              xPadding: 15,
+              yPadding: 10,
+              caretPadding: 0,
+              bodyFontSize: 16
+            }
+          }
+        });
+      }
+    }
+    });
+  }catch (error) {
     console.log(error);
   }
 
@@ -438,7 +452,7 @@
 
     var ctx = document.getElementById("recent-rep2-chart");
     if (ctx) {
-      ctx.height = 230;
+      ctx.height = 280;
 
       var myChart = new Chart(ctx, {
         type: 'line',
@@ -511,6 +525,9 @@
 
         }
       });
+  }catch (error) {
+    console.log(error);
+  }
 
 
 
@@ -533,7 +550,7 @@
     var data4 = [n];
     var ctx = document.getElementById("recent-rep2-donut-chart");
     if (ctx) {
-      ctx.height = 230;
+      ctx.height = 280;
       var bgcolors = getRandomColor();
       var myChart = new Chart(ctx, {
         type: 'doughnut',
@@ -545,11 +562,32 @@
               backgroundColor: bgcolors,
               borderColor: bgcolors,
               pointHoverBackgroundColor: bgcolors,
-              borderWidth: 0,
+              borderWidth: [
+                0, 0
+              ],
               data: data3
             },
           ]
         },
+        options: {
+          maintainAspectRatio: false,
+          responsive: true,
+          cutoutPercentage: 55,
+          animation: {
+            animateScale: true,
+            animateRotate: true
+          },
+          legend: {
+            display: false
+          },
+          tooltips: {
+            titleFontFamily: "Poppins",
+            xPadding: 15,
+            yPadding: 10,
+            caretPadding: 0,
+            bodyFontSize: 16
+          }
+        }
       });
 
 
@@ -559,17 +597,6 @@
 
         }
       });
-
-
-    console.log(months);
-/*    var data3 = [50, 50, 50, 50, 50, 50, 50, 50, 50, 50];
-    var data4 = [102, 70, 80, 100, 56, 53, 80, 75, 65, 90];
-
-    var ctx = document.getElementById("recent-rep2-chart");
-    if (ctx) {
-      ctx.height = 230;
-
-    }*/
 
   } catch (error) {
     console.log(error);
@@ -719,18 +746,33 @@
   // }
 
   try {
+    var n1, p1;
+    $.ajax({
+        type: 'GET',
+        url: '../admin/api/yearlysales',
+        dataType: 'json',
+        success: function (data) { 
+          for(var m in data){
+
+            for(var i in data[m]){
+              n1 = data[m][0];
+              p1 = data[m][1];
+            }
+          }
+      var data3 = p1;
+      console.log(data3);
+      var data4 = [n];
 
     // Percent Chart 2
     var ctx = document.getElementById("percent-chart2");
     if (ctx) {
-      ctx.height = 209;
+      ctx.height = 180;
       var myChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
           datasets: [
             {
-              label: "My First dataset",
-              data: [60, 40],
+              data: data3,
               backgroundColor: [
                 '#00b5e9',
                 '#fa4251'
@@ -748,10 +790,7 @@
               ]
             }
           ],
-          labels: [
-            'Products',
-            'Services'
-          ]
+          labels: n1
         },
         options: {
           maintainAspectRatio: false,
@@ -780,6 +819,8 @@
         }
       });
     }
+  }
+});
 
   } catch (error) {
     console.log(error);

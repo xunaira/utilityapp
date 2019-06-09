@@ -30,6 +30,8 @@
                                             </select>
                                         </div>
                                     </div>
+                                @else
+                                    <input type="text" name="id" id="id" class="d-none" value="{{Auth::user()->id}}">
                                 @endif  
                                 <div class="row form-group">
                                     <div class="col col-md-4">
@@ -126,7 +128,7 @@ $('#submit').attr('disabled', 'true');
         var sales_token = '{{csrf_token()}}';
         $.ajax({
             url:'{{route("get_product")}}',
-            method:"GET",
+            method:"POST",
             data:{
                 product_id:product_id, 
                 _token:sales_token
@@ -168,6 +170,7 @@ $('#submit').attr('disabled', 'true');
             data:{id:id,_token:sales_token},
             datatype:"text",
             success:function(data) {
+                console.log("data " + data);
                 console.log(typeof data.funds[0]);
                 console.log(data.funds[0] != " ");
                 if(typeof data.funds[0] != "undefined"){
@@ -193,4 +196,33 @@ $('#submit').attr('disabled', 'true');
 
     });
 </script>
+@if(Auth::user()->role_id == 3)
+<script type="text/javascript">
+    var id = document.getElementById('id').value;
+    var sales_token = '{{csrf_token()}}';
+    $.ajax({
+            url:'{{url("admin/agent-sales/balance")}}',
+            method:"GET",
+            data:{id:id,_token:sales_token},
+            datatype:"text",
+            success:function(data) {
+                console.log(data.funds[0]);
+                console.log(data.funds[0] != " ");
+                if(typeof data.funds[0] != "undefined"){
+                    $('#submit').removeAttr('disabled');
+                    
+                    var icon = "<span>&#8358</span>";
+                    $('div #total_balance').html(data.funds[0].total_funds);
+                    $('#total').text(data.funds[0].total_funds);               
+
+                }else{
+                    $('#submit').attr('disabled', 'true');
+                    alert('Please add Agents wallet before adding sales');
+                }
+
+            }
+            
+        });
+</script>
+@endif
 @endsection

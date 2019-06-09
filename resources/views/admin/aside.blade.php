@@ -1,6 +1,6 @@
 <aside class="menu-sidebar d-none d-lg-block">
     <div class="logo">
-        <a href="#">
+        <a href="/">
             <h3>IQI POWER APP</h3>
         </a>
     </div>

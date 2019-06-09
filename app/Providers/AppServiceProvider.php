@@ -41,8 +41,9 @@ class AppServiceProvider extends ServiceProvider
                 if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2){
                     $b = Balance::balance();
                     $view->with('bal', $b);
-                }else{
+                }elseif(Auth::user()->role_id == 3){
                     $w = Transactions::wallet_money();
+                    
                     $view->with('bal', $w);
                 }
                 

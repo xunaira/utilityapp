@@ -3315,6 +3315,12 @@ section {
     background-image: -ms-linear-gradient(90deg, #396afc 0%, #2948ff 100%);
 }
 
+.au-card--bg-green {
+    background-image: -moz-linear-gradient(90deg, #1BC587 0%, #1cffac 100%);
+    background-image: -webkit-linear-gradient(90deg, #1BC587 0%, #1cffac 100%);
+    background-image: -ms-linear-gradient(90deg, #1BC587 0%, #1cffac 100%);
+}
+
 .au-card-top-countries {
     padding: 40px;
     padding-top: 25px;

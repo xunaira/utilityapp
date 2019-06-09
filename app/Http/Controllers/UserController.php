@@ -17,6 +17,7 @@ use App\Exports\BankExport;
 use Excel;
 use App\Balance;
 use App\Reports;
+use App\Target;
 
 
 class UserController extends Controller
@@ -113,7 +114,7 @@ class UserController extends Controller
                 $user->company_id = Auth::user()->company_id;
                 
 
-            if ($data->save()) {
+            if ($user->save()) {
                 return redirect("admin/agents")->with(
                     array('message' => 'Agent added successfully.', 
                           'alert-type' => 'success'));
@@ -259,107 +260,123 @@ class UserController extends Controller
             $user_id = $r->get('agent');
         }
         else if(Auth::user()->role_id == 3){
-            $user_id = Auth::user()->id;
+            $user_id = Auth::user()->agent_id;
         }
-        
-        $balance = Balance::where([['company_id', Auth::user()->company_id], ['date', Carbon::now()->toDateString()]])->select('total')->first();
-        
-        if(empty($balance)){
-            
-            return back()->with('error', "Please add system balance before adding money in wallet");
-        
-        }else{
-            
-            $reports = Reports::where([['company_id', Auth::user()->company_id], ['date', Carbon::now()->toDateString()]])->orderBy('created_at', 'DESC')->select('remaining_balance as rem')->first();
-            
 
-            if(empty($reports)){
-                if($total < $balance->total){
-                    $wallet->cash_in_hand = $hand;
-                    $wallet->cash_bank = $bank;
-                    $wallet->total_funds = $total;
-                    $wallet->user_id = $user_id;
-                    $wallet->date = $date;
-                    
-                    if ($wallet->save()) {
-                        //deduct from system balance
-                        $rem = $balance->total - $total;
+        if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2){
+            $balance = Balance::where([['company_id', Auth::user()->company_id], ['date', Carbon::now()->toDateString()]])->select('total')->first();
 
-                        //get the wallet id that is saved 
-                        $wallet_id = Wallet::where('user_id', $user_id)->select('id')->first();
-                        $report = new Reports();
-                        $report->wallet_id = $wallet_id->id;
-                        $report->total_balance = $balance->total;
-                        $report->remaining_balance = $rem;
-                        $report->date = Carbon::now()->toDateString();
-                        $report->created_at = Carbon::now();
-                        $report->updated_at = Carbon::now();
-                        $report->company_id = Auth::user()->company_id;
+            if(empty($balance)){
+                return back()->with('error', "Please add system balance before adding money in wallet");
+            }else{
+                $reports = Reports::where([['company_id', Auth::user()->company_id], ['date', Carbon::now()->toDateString()]])->orderBy('created_at', 'DESC')->select('remaining_balance as rem')->first(); 
+                if(empty($reports)){
+                    if($total < $balance->total){
+                        $wallet->cash_in_hand = $hand;
+                        $wallet->cash_bank = $bank;
+                        $wallet->total_funds = $total;
+                        $wallet->user_id = $user_id;
+                        $wallet->date = $date;
                         
-                        if($report->save()){
-                            return redirect("admin/agents")->with(array('message' => 'Wallet Balance Added successfully.', 
-                                  'alert-type' => 'success'));
-                        }else{
-                            return redirect("admin/agents")->with(array('message' => 'There was a problem adding wallet balance for this agent', 
-                                  'alert-type' => 'error'));
+                        if ($wallet->save()) {
+                            //deduct from system balance
+                            $rem = $balance->total - $total;
+
+                            //get the wallet id that is saved 
+                            $wallet_id = Wallet::where('user_id', $user_id)->select('id')->first();
+                            $report = new Reports();
+                            $report->wallet_id = $wallet_id->id;
+                            $report->total_balance = $balance->total;
+                            $report->remaining_balance = $rem;
+                            $report->date = Carbon::now()->toDateString();
+                            $report->created_at = Carbon::now();
+                            $report->updated_at = Carbon::now();
+                            $report->company_id = Auth::user()->company_id;
+                            
+                            if($report->save()){
+                                return redirect("admin/agents")->with(array('message' => 'Wallet Balance Added successfully.', 
+                                      'alert-type' => 'success'));
+                            }else{
+                                return redirect("admin/agents")->with(array('message' => 'There was a problem adding wallet balance for this agent', 
+                                      'alert-type' => 'error'));
+                            }
+
+                            return redirect("admin/agents")->with(array('message' => 'Balance Added successfully.', 
+                                      'alert-type' => 'success'));
+                            
+                        } else {
+                                return redirect("admin/agents")->with(array('message' => 'The entered amount is greater than the system balance', 
+                                      'alert-type' => 'error'));
                         }
-
-                        return redirect("admin/agents")->with(array('message' => 'Balance Added successfully.', 
-                                  'alert-type' => 'success'));
-                        
-                    } else {
-                            return redirect("admin/agents")->with(array('message' => 'The entered amount is greater than the system balance', 
-                                  'alert-type' => 'error'));
+                    }else{
+                        return redirect("admin/agents")->with(array('message' => 'You dont have sufficient funds in the system to carry out this transaction', 
+                                      'alert-type' => 'error'));
                     }
-                }else{
-                    return redirect("admin/agents")->with(array('message' => 'You dont have sufficient funds in the system to carry out this transaction', 
-                                  'alert-type' => 'error'));
-                }
-
-            }else{            
-                if($total < $reports->rem){
-                    $wallet->cash_in_hand = $hand;
-                    $wallet->cash_bank = $bank;
-                    $wallet->total_funds = $total;
-                    $wallet->user_id = $user_id;
-                    $wallet->date = $date;
-                    
-                    if ($wallet->save()) {
-                        //deduct from system $reports->rembalance
-                        $rem = $reports->rem - $total;
-
-                        //get the wallet id that is saved 
-                        $wallet_id = Wallet::where('user_id', $user_id)->select('id')->first();
-                        $report = new Reports();
-                        $report->wallet_id = $wallet_id->id;
-                        $report->total_balance = $balance->total;
-                        $report->remaining_balance = $rem;
-                        $report->date = Carbon::now()->toDateString();
-                        $report->created_at = Carbon::now();
-                        $report->updated_at = Carbon::now();
-                        $report->company_id = Auth::user()->company_id;
+                }else{            
+                    if($total < $reports->rem){
+                        $wallet->cash_in_hand = $hand;
+                        $wallet->cash_bank = $bank;
+                        $wallet->total_funds = $total;
+                        $wallet->user_id = $user_id;
+                        $wallet->date = $date;
                         
-                        if($report->save()){
-                            return redirect("admin/agents")->with(array('message' => 'Wallet Balance Added successfully.', 
-                                  'alert-type' => 'success'));
-                        }else{
-                            return redirect("admin/agents")->with(array('message' => 'There was a problem adding wallet balance for this agent', 
-                                  'alert-type' => 'error'));
+                        if ($wallet->save()) {
+                            //deduct from system $reports->rembalance
+                            $rem = $reports->rem - $total;
+
+                            //get the wallet id that is saved 
+                            $wallet_id = Wallet::where('user_id', $user_id)->select('id')->first();
+                            $report = new Reports();
+                            $report->wallet_id = $wallet_id->id;
+                            $report->total_balance = $balance->total;
+                            $report->remaining_balance = $rem;
+                            $report->date = Carbon::now()->toDateString();
+                            $report->created_at = Carbon::now();
+                            $report->updated_at = Carbon::now();
+                            $report->company_id = Auth::user()->company_id;
+                            
+                            if($report->save()){
+                                return redirect("admin/agents")->with(array('message' => 'Wallet Balance Added successfully.', 
+                                      'alert-type' => 'success'));
+                            }else{
+                                return redirect("admin/agents")->with(array('message' => 'There was a problem adding wallet balance for this agent', 
+                                      'alert-type' => 'error'));
+                            }
+
+                            return redirect("admin/agents")->with(array('message' => 'Balance Added successfully.', 
+                                      'alert-type' => 'success'));
+                            
+                        } else {
+                                return redirect("admin/agents")->with(array('message' => 'The entered amount is greater than the system balance', 
+                                      'alert-type' => 'error'));
                         }
-
-                        return redirect("admin/agents")->with(array('message' => 'Balance Added successfully.', 
-                                  'alert-type' => 'success'));
-                        
-                    } else {
-                            return redirect("admin/agents")->with(array('message' => 'The entered amount is greater than the system balance', 
-                                  'alert-type' => 'error'));
+                    }else{
+                        return redirect("admin/agents")->with(array('message' => 'You dont have sufficient funds in the system to carry out this transaction', 
+                                      'alert-type' => 'error'));
                     }
-                }else{
-                    return redirect("admin/agents")->with(array('message' => 'You dont have sufficient funds in the system to carry out this transaction', 
-                                  'alert-type' => 'error'));
                 }
             }
-        }
+
+        }elseif(Auth::user()->role_id == 3){
+            $wallet->cash_in_hand = $hand;
+            $wallet->cash_bank = $bank;
+            $wallet->total_funds = $total;
+            $wallet->date = $date;
+            $wallet->user_id = $user_id;
+
+            if($wallet->save()){
+                return redirect("admin/dashboard")->with(array('message' => 'Wallet Balance Added successfully.','alert-type' => 'success'));
+            }else{
+                return redirect("admin/dashboard")->with(array('message' => 'There was a problem adding wallet balance for this agent', 
+                                      'alert-type' => 'error'));
+
+            }
+
+
+
+        }else{
+
+        }      
 
     }
 
@@ -409,8 +426,10 @@ class UserController extends Controller
         $exporturl = "admin/agents/export/" . $id;
         $detailurl = "admin/agents/agentexport/" . $id;
         $bankurl = "admin/agents/bankexport/" . $id;
+
+        $target = Target::where('user_id', $id)->paginate(10);
         
-        return view('users.detail', ['agents' => $agents, 'w' => $w, 'balance' => $balance, 'transactions' => $transactions, 'exporturl' => $exporturl, 'detailurl' => $detailurl, 'bankurl' => $bankurl]);
+        return view('users.detail', ['agents' => $agents, 'w' => $w, 'balance' => $balance, 'transactions' => $transactions, 'exporturl' => $exporturl, 'detailurl' => $detailurl, 'bankurl' => $bankurl, 'target' => $target]);
     }
 
     public function export($id){
@@ -459,4 +478,28 @@ class UserController extends Controller
         $file_name = $name->name . ".xlsx";
         return Excel::download(new BankExport($balance), $file_name);
     }
+
+    public function target(Request $request){
+        $agent_id = $request->get('agent');
+        $value = $request->get('value');
+        $date = $request->get('date');
+
+        $target = new Target;
+        $target->user_id = $agent_id;
+        $target->target = $value;
+        $target->date = $date;
+        $target->created_at = Carbon::now();
+        $target->updated_at = Carbon::now();
+
+        if($target->save()){
+            return back()->with(array('message' => 'Target Added successfully.', 
+                                  'alert-type' => 'success'));
+                        
+        } else {
+            return backwith(array('message' => 'There was a problem adding target for this agent right now.', 
+                                  'alert-type' => 'error'));
+        }
+    }
+
+
 }

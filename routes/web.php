@@ -47,6 +47,8 @@ Route::group(['prefix' => 'admin'], function(){
 
 		Route::get('bankexport/{id}', 'UserController@bankexport');
 
+		Route::post('settarget', 'UserController@target');
+
 	});
 
 	Route::group(['prefix' => 'users'], function(){
@@ -163,6 +165,8 @@ Route::group(['prefix' => 'admin'], function(){
 
 	Route::group(['prefix' => 'api'], function(){
 		Route::get('monthlysales', 'HomeController@getSalesByMonth');
+		Route::get('yearlysales', 'HomeController@getSalesByYear');
+
 
 	});
 

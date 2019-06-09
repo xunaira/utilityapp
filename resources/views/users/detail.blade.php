@@ -100,51 +100,79 @@
                         </div>
                         @endforeach
                     </div>
-                    <div class="card">
-                  <div class="card-header user-header alt bg-success">
-                      <h2 class="text-light display-6 mb-2 d-inline">Bank Balance</h2>
-                      <a href="../../../{{$bankurl}}" class="d-inline float-right">                    
-                                    <i class="zmdi zmdi-download text-light zmdi-hc-2x"></i>                    
-                                  </a>
-                  </div>
-                  <div class="card-body">
-                    <table class="table table-top-countries">
-                        <thead>
-                          <th>
-                            Cash in Bank
-                          </th>
-                          <th>
-                            Cash in Hand
-                          </th>
-                          <th>
-                            Total Funds
-                          </th>
-                          <th>
-                            Closing Balance
-                          </th>
-                          <th>
-                            Date
-                          </th>
-                        </thead>
-                        <tbody>
-                          @foreach($balance as $c)
-                          <tr>
-                            <td class="text-dark">&#8358; {{$c->cash_bank}}</td>
-                            <td class="text-dark">&#8358; {{$c->cash_in_hand}}</td>
-                            <td class="text-dark">&#8358; {{$c->total_funds}}</td>
-                            <td class="text-dark">&#8358; {{$c->closing_balance}}</td>
-                            <td class="text-dark">
+                  <div class="card">
+                    <div class="card-header user-header alt bg-warning">
+                        <h2 class="text-light display-6 mb-2 d-inline">Agent Targets</h2>
+                    </div>
+                    <div class="card-body">
+                      <table class="table table-top-countries">
+                          <thead>
+                            <th>
+                              Target Value (&#8358;)
+                            </th>
+                            <th>
+                              Date
+                            </th>
+                          </thead>
+                          <tbody>
+                            @foreach($target as $t)
+                            <tr>
+                              <td class="text-dark">&#8358; {{$t->target}}</td>
                               <?php 
-                                $createdAt = Carbon\Carbon::parse($c->date)->format('M d Y');
-                              ?> 
-                              {{$createdAt}}
-                            </td>
-                          </tr>
-                          @endforeach
-                        </tbody>
-                    </table>
+                                  $createdAt = Carbon\Carbon::parse($t->date)->format('M d Y');
+                                ?>
+                              <td class="text-dark">{{$createdAt}}</td>
+                            </tr>
+                            @endforeach
+                          </tbody>
+                      </table>
+                    </div>
                   </div>
-                </div>
+                  <div class="card">
+                    <div class="card-header user-header alt bg-success">
+                        <h2 class="text-light display-6 mb-2 d-inline">Bank Balance</h2>
+                        <a href="../../../{{$bankurl}}" class="d-inline float-right">                    
+                                      <i class="zmdi zmdi-download text-light zmdi-hc-2x"></i>                    
+                                    </a>
+                    </div>
+                    <div class="card-body">
+                      <table class="table table-top-countries">
+                          <thead>
+                            <th>
+                              Cash in Bank
+                            </th>
+                            <th>
+                              Cash in Hand
+                            </th>
+                            <th>
+                              Total Funds
+                            </th>
+                            <th>
+                              Closing Balance
+                            </th>
+                            <th>
+                              Date
+                            </th>
+                          </thead>
+                          <tbody>
+                            @foreach($balance as $c)
+                            <tr>
+                              <td class="text-dark">&#8358; {{$c->cash_bank}}</td>
+                              <td class="text-dark">&#8358; {{$c->cash_in_hand}}</td>
+                              <td class="text-dark">&#8358; {{$c->total_funds}}</td>
+                              <td class="text-dark">&#8358; {{$c->closing_balance}}</td>
+                              <td class="text-dark">
+                                <?php 
+                                  $createdAt = Carbon\Carbon::parse($c->date)->format('M d Y');
+                                ?> 
+                                {{$createdAt}}
+                              </td>
+                            </tr>
+                            @endforeach
+                          </tbody>
+                      </table>
+                    </div>
+                  </div>
             	  <div class="card">
                   <div class="card-header user-header alt bg-info">
                       <h2 class="text-light display-6 mb-2 d-inline">Transactions</h2>

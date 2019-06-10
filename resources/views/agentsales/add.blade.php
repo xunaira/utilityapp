@@ -156,7 +156,10 @@ $('#submit').attr('disabled', 'true');
         $('#submit').removeAttr('disabled');
 
 
-   })
+   });
+</script>
+@if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
+<script type="text/javascript">
    $("#agent").change(function () {
         //get the agent ID
         var id = $(this).val();
@@ -170,18 +173,17 @@ $('#submit').attr('disabled', 'true');
             data:{id:id,_token:sales_token},
             datatype:"text",
             success:function(data) {
-                console.log("data " + data);
-                console.log(typeof data.funds[0]);
-                console.log(data.funds[0] != " ");
-                if(typeof data.funds[0] != "undefined"){
+                if(typeof data.funds != "undefined"){
                     $('#submit').removeAttr('disabled');
                     
                     var icon = "<span>&#8358</span>";
-                    $('div #total_balance').html(data.funds[0].total_funds);
-                    $('#total').text(data.funds[0].total_funds);
-
-
-                
+                    if(typeof data.funds.total_funds != "undefined"){
+                        $('div #total_balance').html(data.funds.total_funds);
+                        $('#total').text(data.funds.total_funds);
+                    }else{
+                        $('div #total_balance').html(data.funds);
+                        $('#total').text(data.funds);
+                    }
 
                 }else{
                     $('#submit').attr('disabled', 'true');
@@ -196,6 +198,7 @@ $('#submit').attr('disabled', 'true');
 
     });
 </script>
+@endif
 @if(Auth::user()->role_id == 3)
 <script type="text/javascript">
     var id = document.getElementById('id').value;

@@ -1,3 +1,4 @@
+
 (function ($) {
   // USE STRICT
   "use strict";
@@ -444,7 +445,7 @@
       }
 
     }
-
+    c++;
     var avg = total / c;
     avg = 500 * Math.round(avg/500);
     var data3 = p;
@@ -452,7 +453,7 @@
 
     var ctx = document.getElementById("recent-rep2-chart");
     if (ctx) {
-      ctx.height = 280;
+      ctx.height = 230;
 
       var myChart = new Chart(ctx, {
         type: 'line',

@@ -45,9 +45,11 @@ class SettingsController extends Controller
     		$c->type = $r->get('type');
     		
     		if ($c->save()) {
-                return back()->with('success','Commission added successfully.');
+                return redirect("admin/settings")->with(array('message' => 'Commission has been added successfully', 
+                          'alert-type' => 'success'));
             } else {
-                return back()->with('error','Commission Not updated');
+                return redirect("admin/settings")->with(array('message' => 'There was a problem adding this commission.', 
+                          'alert-type' => 'error'));
             }
     	}
 

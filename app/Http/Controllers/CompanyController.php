@@ -54,7 +54,7 @@ class CompanyController extends Controller
 			$user->company_id = $com->id;
 			
 
-			if ($data->save()) {
+			if ($user->save()) {
             	return redirect("admin/company")->with(
                 	array('message' => 'Company added successfully.', 
                       'alert-type' => 'success'));

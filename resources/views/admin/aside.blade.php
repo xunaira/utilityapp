@@ -476,6 +476,9 @@
                                 <li>
                                     <a href="{{url('admin/settings/')}}">Commission Dashboard</a>
                                 </li>
+                                <li>
+                                    <a href="{{url('admin/settings/balance/')}}">System Balance</a>
+                                </li>
                                 
                             </ul>
                         </li>
@@ -520,7 +523,9 @@
                                         <li>
                                             <a href="{{url('admin/settings/')}}">Commission Dashboard</a>
                                         </li>
-                                        
+                                        <li>
+                                            <a href="{{url('admin/settings/balance/')}}">System Balance</a>
+                                        </li>                                        
                                     </ul>
                                 </li>
                     @elseif (\Request::is('admin/agents') || \Request::is('admin/agents/*'))
@@ -562,6 +567,9 @@
                                     <ul class="list-unstyled navbar__sub-list js-sub-list">
                                         <li>
                                             <a href="{{url('admin/settings/')}}">Commission Dashboard</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{url('admin/settings/balance/')}}">System Balance</a>
                                         </li>
                                         
                                     </ul>
@@ -606,6 +614,9 @@
                                         <li>
                                             <a href="{{url('admin/settings/')}}">Commission Dashboard</a>
                                         </li>
+                                        <li>
+                                            <a href="{{url('admin/settings/balance/')}}">System Balance</a>
+                                        </li>
                                         
                                     </ul>
                                 </li>
@@ -648,7 +659,10 @@
                                     <ul class="list-unstyled navbar__sub-list js-sub-list">
                                         <li>
                                             <a href="{{url('admin/settings/')}}">Commission Dashboard</a>
-                                        </li>                                        
+                                        </li> 
+                                        <li>
+                                            <a href="{{url('admin/settings/balance/')}}">System Balance</a>
+                                        </li>                                       
                                     </ul>
                                 </li>
                         @elseif (\Request::is('admin/reports') || \Request::is('admin/reports/*'))
@@ -690,7 +704,10 @@
                                     <ul class="list-unstyled navbar__sub-list js-sub-list">
                                         <li>
                                             <a href="{{url('admin/settings/')}}">Commission Dashboard</a>
-                                        </li>                                        
+                                        </li>   
+                                        <li>
+                                            <a href="{{url('admin/settings/balance/')}}">System Balance</a>
+                                        </li>                                     
                                     </ul>
                                 </li>
 
@@ -733,7 +750,10 @@
                                     <ul class="list-unstyled navbar__sub-list js-sub-list">
                                         <li>
                                             <a href="{{url('admin/settings/')}}">Commission Dashboard</a>
-                                        </li>                                        
+                                        </li> 
+                                        <li>
+                                            <a href="{{url('admin/settings/balance/')}}">System Balance</a>
+                                        </li>                                       
                                     </ul>
                                 </li>
                     @endif

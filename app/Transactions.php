@@ -19,9 +19,9 @@ class Transactions extends Model
 
     	$w = Transactions::where([['agent_id', Auth::user()->agent_id], ['date', Carbon\Carbon::now()->toDateString()]])->select('closing_balance as cb')->orderBy('date', 'DESC')->first();  
 
-    	if(empty($w)){
+    	if($w == "null" || $a == 'null'){
     		$wallet = $a->cb;
-    	}elseif (empty($a)){
+    	}elseif ($a == 'null' || !empty($w)){
     		$wallet = $w->cb;
     	}elseif(!empty($w) && !empty($a)){
             $wallet = $a->cb;

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use App\agents_migration;
 use DB;
 use Auth;
+use Carbon;
 
 class UsersController extends Controller
 {
@@ -75,7 +76,7 @@ class UsersController extends Controller
             if($data->role_id == 2){
                 $email = User::where('email', $e)->get();
                 foreach($email as $e){
-                    $sup = DB::table('supervisor')->insert(['user_id' => $e->id, 'name' => $e->name]);
+                    $sup = DB::table('supervisor')->insert(['user_id' => $e->id, 'name' => $e->name, 'created_at' => Carbon\Carbon::now(), 'updated_at' => Carbon\Carbon::now()]);
                 }
             }
             return redirect("admin/users")->with('success','User added successfully.');

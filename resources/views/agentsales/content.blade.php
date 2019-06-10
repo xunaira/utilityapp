@@ -72,26 +72,25 @@
                                                             <td class="desc">{{$d}}</td>
                                                             <td>{{$p->status}}</td>                                            
                                                             <td>
-                                                                <div class="table-data-feature">
-                                                                    @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
+                                                            <div class="table-data-feature">
+                                                                @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
+                                                                    @if($p->status == "Approved")
                                                                         <a href="#" class="pr-4">
-                                                                            <button class="item" data-toggle="modal" data-target="#detailModal" data-id="{{$p->id}}">
-                                                                                <i class="fa fa-eye"></i>
+                                                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Approve" style="background-color: #28a745 !important">
+                                                                                <i class="fa fa-check" style="color: #fff;"></i>
                                                                             </button>
                                                                         </a>
-                                                                        @if($p->status == "Approved")
-                                                                            <a href="#" class="pr-4">
-                                                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Approve" style="background-color: #28a745 !important">
-                                                                                    <i class="fa fa-check" style="color: #fff;"></i>
-                                                                                </button>
-                                                                            </a>
-                                                                        @else
-                                                                             <a href="../admin/agent-sales/approve/{{$p->id}}" class="pr-4">
-                                                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Approve">
-                                                                                    <i class="fa fa-check"></i>
-                                                                                </button>
-                                                                            </a>
-
+                                                                         <a href="../admin/agent-sales/reject/{{$p->id}}" class="pr-4">
+                                                                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Reject">
+                                                                                        <i class="fa fa-close"></i>
+                                                                                    </button>
+                                                                                </a>
+                                                                    @else
+                                                                        <a href="../admin/agent-sales/approve/{{$p->id}}" class="pr-4">
+                                                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Approve">
+                                                                                <i class="fa fa-check"></i>
+                                                                            </button>
+                                                                        </a>
                                                                         @endif
                                                                         @if($p->status == "Rejected")
                                                                             <a href="#" class="pr-4">
@@ -127,13 +126,16 @@
                                                                         <i class="zmdi zmdi-delete"></i>
                                                                         </button>
                                                                     </a>
-                                                                </div>
+                                                            </div>
                                                             </td>
                                                         </tr>
                                                         <tr class="spacer"></tr>
                                                     @endforeach
                                                 </tbody>
                                             </table>
+                                            <div class="float-right">
+                                                {{$all->links()}}
+                                            </div>
                                         </div>                                        
                                     </div>
                                     <div class="tab-pane fade show" id="pills-ap" role="tabpanel" aria-labelledby="custom-nav-home-tab">
@@ -166,46 +168,69 @@
                                                             <td>{{$p->status}}</td>                                            
                                                             <td>
                                                                 <div class="table-data-feature">
-                                                                    @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
+                                                                @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
+                                                                    @if($p->status == "Approved")
                                                                         <a href="#" class="pr-4">
-                                                                            <button class="item" data-toggle="modal" data-target="#detailModal" data-id="{{$p->id}}">
-                                                                                <i class="fa fa-eye"></i>
+                                                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Approve" style="background-color: #28a745 !important">
+                                                                                <i class="fa fa-check" style="color: #fff;"></i>
                                                                             </button>
                                                                         </a>
-                                                                        @if($p->status == "Approved")
+                                                                         <a href="../admin/agent-sales/reject/{{$p->id}}" class="pr-4">
+                                                                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Reject">
+                                                                                        <i class="fa fa-close"></i>
+                                                                                    </button>
+                                                                                </a>
+                                                                    @else
+                                                                        <a href="../admin/agent-sales/approve/{{$p->id}}" class="pr-4">
+                                                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Approve">
+                                                                                <i class="fa fa-check"></i>
+                                                                            </button>
+                                                                        </a>
+                                                                        @endif
+                                                                        @if($p->status == "Rejected")
                                                                             <a href="#" class="pr-4">
-                                                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Approve" style="background-color: #28a745 !important">
-                                                                                    <i class="fa fa-check" style="color: #fff;"></i>
+                                                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Rejected" style="background-color: #b30000 !important">
+                                                                                    <i class="fa fa-close" style="color: #fff;"></i>
                                                                                 </button>
                                                                             </a>
                                                                         @else
-                                                                             <a href="../admin/agent-sales/approve/{{$p->id}}" class="pr-4">
-                                                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Approve">
-                                                                                    <i class="fa fa-check"></i>
-                                                                                </button>
-                                                                            </a>
+                                                                             @if($p->status == "Approved")
+                                                                                <a href="../admin/agent-sales/reject/{{$p->id}}" class="pr-4 d-none">
+                                                                                    <button class="item d-none" data-toggle="tooltip" data-placement="top" title="Reject">
+                                                                                        <i class="fa fa-close"></i>
+                                                                                    </button>
+                                                                                </a>
+                                                                            @else
+                                                                                <a href="../admin/agent-sales/reject/{{$p->id}}" class="pr-4">
+                                                                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Reject">
+                                                                                        <i class="fa fa-close"></i>
+                                                                                    </button>
+                                                                                </a>
 
-                                                                        @endif 
+                                                                            @endif
 
+
+                                                                        @endif
                                                                     @endif
                                                                     <a href="../admin/agent-sales/edit/{{$p->id}}" class="pr-4"><button class="item" data-toggle="tooltip" data-placement="top" title="Edit">
                                                                         <i class="zmdi zmdi-edit"></i>
                                                                         </button>
                                                                     </a>
-                                                                    
                                                                     <a href="../admin/agent-sales/delete/{{$p->id}}">
                                                                         <button class="item" data-toggle="tooltip" data-placement="top" title="Delete">
-                                                                            <i class="zmdi zmdi-delete"></i>
+                                                                        <i class="zmdi zmdi-delete"></i>
                                                                         </button>
-                                                                    </a>   
-                                                                                                                      
-                                                                </div>
+                                                                    </a>
+                                                            </div>
                                                             </td>
                                                         </tr>
                                                         <tr class="spacer"></tr>
                                                     @endforeach
                                                 </tbody>
                                             </table>
+                                            <div class="float-right">
+                                                {{$all->links()}}
+                                            </div>
                                         </div>                                        
                                     </div>
                                     @else
@@ -239,46 +264,69 @@
                                                             <td>{{$p->status}}</td>                                            
                                                             <td>
                                                                 <div class="table-data-feature">
-                                                                    @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
+                                                                @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
+                                                                    @if($p->status == "Approved")
                                                                         <a href="#" class="pr-4">
-                                                                            <button class="item" data-toggle="modal" data-target="#detailModal" data-id="{{$p->id}}">
-                                                                                <i class="fa fa-eye"></i>
+                                                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Approve" style="background-color: #28a745 !important">
+                                                                                <i class="fa fa-check" style="color: #fff;"></i>
                                                                             </button>
                                                                         </a>
-                                                                        @if($p->status == "Approved")
+                                                                         <a href="../admin/agent-sales/reject/{{$p->id}}" class="pr-4">
+                                                                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Reject">
+                                                                                        <i class="fa fa-close"></i>
+                                                                                    </button>
+                                                                                </a>
+                                                                    @else
+                                                                        <a href="../admin/agent-sales/approve/{{$p->id}}" class="pr-4">
+                                                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Approve">
+                                                                                <i class="fa fa-check"></i>
+                                                                            </button>
+                                                                        </a>
+                                                                        @endif
+                                                                        @if($p->status == "Rejected")
                                                                             <a href="#" class="pr-4">
-                                                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Approve" style="background-color: #28a745 !important">
-                                                                                    <i class="fa fa-check" style="color: #fff;"></i>
+                                                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Rejected" style="background-color: #b30000 !important">
+                                                                                    <i class="fa fa-close" style="color: #fff;"></i>
                                                                                 </button>
                                                                             </a>
                                                                         @else
-                                                                             <a href="../admin/agent-sales/approve/{{$p->id}}" class="pr-4">
-                                                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Approve">
-                                                                                    <i class="fa fa-check"></i>
-                                                                                </button>
-                                                                            </a>
+                                                                             @if($p->status == "Approved")
+                                                                                <a href="../admin/agent-sales/reject/{{$p->id}}" class="pr-4 d-none">
+                                                                                    <button class="item d-none" data-toggle="tooltip" data-placement="top" title="Reject">
+                                                                                        <i class="fa fa-close"></i>
+                                                                                    </button>
+                                                                                </a>
+                                                                            @else
+                                                                                <a href="../admin/agent-sales/reject/{{$p->id}}" class="pr-4">
+                                                                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Reject">
+                                                                                        <i class="fa fa-close"></i>
+                                                                                    </button>
+                                                                                </a>
+
+                                                                            @endif
+
 
                                                                         @endif
-                                                
                                                                     @endif
-                                                                    @if($p->status == "Approved")
-                                                                    <a href="../admin/agent-sales/edit/{{$p->id}}" class="pr-4 d-none"><button class="item" data-toggle="tooltip" data-placement="top" title="Edit">
+                                                                    <a href="../admin/agent-sales/edit/{{$p->id}}" class="pr-4"><button class="item" data-toggle="tooltip" data-placement="top" title="Edit">
                                                                         <i class="zmdi zmdi-edit"></i>
                                                                         </button>
-                                                                    </a>                                                           
+                                                                    </a>
                                                                     <a href="../admin/agent-sales/delete/{{$p->id}}">
-                                                                        <button class="item d-none" data-toggle="tooltip" data-placement="top" title="Delete">
+                                                                        <button class="item" data-toggle="tooltip" data-placement="top" title="Delete">
                                                                         <i class="zmdi zmdi-delete"></i>
                                                                         </button>
                                                                     </a>
-                                                                    @endif
-                                                                </div>
+                                                            </div>
                                                             </td>
                                                         </tr>
                                                         <tr class="spacer"></tr>
                                                     @endforeach
                                                 </tbody>
                                             </table>
+                                            <div class="float-right">
+                                                {{$all->links()}}
+                                            </div>
                                         </div>                                        
                                     </div>
                                     @endif
@@ -312,25 +360,24 @@
                                                             <td>{{$p->status}}</td>                                            
                                                             <td>
                                                                 <div class="table-data-feature">
-                                                                    @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
+                                                                @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
+                                                                    @if($p->status == "Approved")
                                                                         <a href="#" class="pr-4">
-                                                                            <button class="item" data-toggle="modal" data-target="#detailModal" data-id="{{$p->id}}">
-                                                                                <i class="fa fa-eye"></i>
+                                                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Approve" style="background-color: #28a745 !important">
+                                                                                <i class="fa fa-check" style="color: #fff;"></i>
                                                                             </button>
                                                                         </a>
-                                                                        @if($p->status == "Approved")
-                                                                            <a href="#" class="pr-4">
-                                                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Approve" style="background-color: #28a745 !important">
-                                                                                    <i class="fa fa-check" style="color: #fff;"></i>
-                                                                                </button>
-                                                                            </a>
-                                                                        @else
-                                                                             <a href="../admin/agent-sales/approve/{{$p->id}}" class="pr-4">
-                                                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Approve">
-                                                                                    <i class="fa fa-check"></i>
-                                                                                </button>
-                                                                            </a>
-
+                                                                         <a href="../admin/agent-sales/reject/{{$p->id}}" class="pr-4">
+                                                                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Reject">
+                                                                                        <i class="fa fa-close"></i>
+                                                                                    </button>
+                                                                                </a>
+                                                                    @else
+                                                                        <a href="../admin/agent-sales/approve/{{$p->id}}" class="pr-4">
+                                                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Approve">
+                                                                                <i class="fa fa-check"></i>
+                                                                            </button>
+                                                                        </a>
                                                                         @endif
                                                                         @if($p->status == "Rejected")
                                                                             <a href="#" class="pr-4">
@@ -339,7 +386,7 @@
                                                                                 </button>
                                                                             </a>
                                                                         @else
-                                                                            @if($p->status == "Approved")
+                                                                             @if($p->status == "Approved")
                                                                                 <a href="../admin/agent-sales/reject/{{$p->id}}" class="pr-4 d-none">
                                                                                     <button class="item d-none" data-toggle="tooltip" data-placement="top" title="Reject">
                                                                                         <i class="fa fa-close"></i>
@@ -354,6 +401,7 @@
 
                                                                             @endif
 
+
                                                                         @endif
                                                                     @endif
                                                                     <a href="../admin/agent-sales/edit/{{$p->id}}" class="pr-4"><button class="item" data-toggle="tooltip" data-placement="top" title="Edit">
@@ -365,13 +413,16 @@
                                                                         <i class="zmdi zmdi-delete"></i>
                                                                         </button>
                                                                     </a>
-                                                                </div>
+                                                            </div>
                                                             </td>
                                                         </tr>
                                                         <tr class="spacer"></tr>
                                                     @endforeach
                                                 </tbody>
                                             </table>
+                                            <div class="float-right">
+                                                {{$all->links()}}
+                                            </div>
                                         </div>                                        
                                     </div>
                                     <div class="tab-pane fade show" id="pills-rj" role="tabpanel" aria-labelledby="custom-nav-home-tab">
@@ -404,12 +455,25 @@
                                                             <td>{{$p->status}}</td>                                            
                                                             <td>
                                                                 <div class="table-data-feature">
-                                                                    @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
+                                                                @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
+                                                                    @if($p->status == "Approved")
                                                                         <a href="#" class="pr-4">
-                                                                            <button class="item" data-toggle="modal" data-target="#detailModal" data-id="{{$p->id}}">
-                                                                                <i class="fa fa-eye"></i>
+                                                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Approve" style="background-color: #28a745 !important">
+                                                                                <i class="fa fa-check" style="color: #fff;"></i>
                                                                             </button>
                                                                         </a>
+                                                                         <a href="../admin/agent-sales/reject/{{$p->id}}" class="pr-4">
+                                                                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Reject">
+                                                                                        <i class="fa fa-close"></i>
+                                                                                    </button>
+                                                                                </a>
+                                                                    @else
+                                                                        <a href="../admin/agent-sales/approve/{{$p->id}}" class="pr-4">
+                                                                            <button class="item" data-toggle="tooltip" data-placement="top" title="Approve">
+                                                                                <i class="fa fa-check"></i>
+                                                                            </button>
+                                                                        </a>
+                                                                        @endif
                                                                         @if($p->status == "Rejected")
                                                                             <a href="#" class="pr-4">
                                                                                 <button class="item" data-toggle="tooltip" data-placement="top" title="Rejected" style="background-color: #b30000 !important">
@@ -417,11 +481,21 @@
                                                                                 </button>
                                                                             </a>
                                                                         @else
-                                                                             <a href="../admin/agent-sales/reject/{{$p->id}}" class="pr-4">
-                                                                                <button class="item" data-toggle="tooltip" data-placement="top" title="Reject">
-                                                                                    <i class="fa fa-close"></i>
-                                                                                </button>
-                                                                            </a>
+                                                                             @if($p->status == "Approved")
+                                                                                <a href="../admin/agent-sales/reject/{{$p->id}}" class="pr-4 d-none">
+                                                                                    <button class="item d-none" data-toggle="tooltip" data-placement="top" title="Reject">
+                                                                                        <i class="fa fa-close"></i>
+                                                                                    </button>
+                                                                                </a>
+                                                                            @else
+                                                                                <a href="../admin/agent-sales/reject/{{$p->id}}" class="pr-4">
+                                                                                    <button class="item" data-toggle="tooltip" data-placement="top" title="Reject">
+                                                                                        <i class="fa fa-close"></i>
+                                                                                    </button>
+                                                                                </a>
+
+                                                                            @endif
+
 
                                                                         @endif
                                                                     @endif
@@ -434,7 +508,7 @@
                                                                         <i class="zmdi zmdi-delete"></i>
                                                                         </button>
                                                                     </a>
-                                                                </div>
+                                                            </div>
                                                             </td>
                                                         </tr>
                                                         <tr class="spacer"></tr>

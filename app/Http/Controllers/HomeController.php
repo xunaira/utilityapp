@@ -49,9 +49,10 @@ class HomeController extends Controller
             $today = DB::table('add_sales')
                 ->join('products', 'add_sales.product_id', '=', 'products.id')
                 ->join('users', 'add_sales.agent', '=', 'users.agent_id')
-                ->join('supervisor', 'supervisor.user_id', '=', 'users.id')
+                ->join('agents', 'agents.id', '=', 'users.agent_id')
+                ->join('supervisor', 'supervisor.user_id', '=', 'agents.supervisor_id')
                 ->selectRaw('SUM(add_sales.sale_value) as sales_value')
-                ->where([['status', 'Approved'], ['date', Carbon\Carbon::now()->toDateString()], ['supervisor.user_id', Auth::user()->id]])
+                ->where([['status', 'Approved'], ['date', Carbon\Carbon::now()->toDateString()], ['agents.supervisor_id', Auth::user()->id]])
                 ->get();
             
         }elseif (Auth::user()->role_id == 3){
@@ -60,14 +61,19 @@ class HomeController extends Controller
                 ->join('users', 'add_sales.agent', '=', 'users.agent_id')
                 ->join('agents', 'agents.id', '=', 'users.agent_id')
                 ->selectRaw('SUM(add_sales.sale_value) as sales_value')
-                ->where([['status', 'Approved'], ['date', Carbon\Carbon::now()->toDateString()], ['agents.id', Auth::user()->id]])
+                ->where([['status', 'Approved'], ['date', Carbon\Carbon::now()->toDateString()], ['add_sales.agent', Auth::user()->agent_id]])
                 ->get();
         }
 
 
-        foreach($today as $t){
-            $tday = $t->sales_value;
+        if(!empty($today)){
+            foreach($today as $t){
+                $tday = $t->sales_value;
+            }
+        }else{
+            $tday = 0;
         }
+        
 
         //Total Sales this Monthly
         $month = Carbon\Carbon::now()->month;
@@ -86,11 +92,13 @@ class HomeController extends Controller
             $monthly = DB::table('add_sales')
             ->join('products', 'add_sales.product_id', '=', 'products.id')
             ->join('users', 'add_sales.agent', '=', 'users.agent_id')
-            ->join('supervisor', 'supervisor.user_id', '=', 'users.id')
+            ->join('agents', 'agents.id', '=', 'users.agent_id')
+            ->join('supervisor', 'supervisor.user_id', '=', 'agents.supervisor_id')
             ->selectRaw('SUM(add_sales.sale_value) as sales_value')
-            ->where([['status', 'Approved'], ['supervisor.user_id', Auth::user()->id]])
+            ->where([['status', 'Approved'], ['agents.supervisor_id', Auth::user()->id]])
             ->whereMonth('date', $month)
             ->get();
+
 
         }elseif(Auth::user()->role_id == 3){
             $monthly = DB::table('add_sales')
@@ -107,19 +115,73 @@ class HomeController extends Controller
 
         }
 
-        foreach($monthly as $m){
-            $mo = $m->sales_value;
+        $mo = "";
+        if(!empty($monthly)){
+            foreach($monthly as $m){
+                $mo = $m->sales_value;
+            }
+        }else{
+            $mo = 0;
         }
-
-        //Total Earnings 
-        $earnings = DB::table('add_sales')
+        
+        $earn = "";
+        $year = Carbon\Carbon::now()->year;
+        if (Auth::user()->role_id == 1){
+            //Total Earnings 
+            $earnings = DB::table('add_sales')
+                ->join('products', 'add_sales.product_id', '=', 'products.id')
+                ->join('users', 'add_sales.agent', '=', 'users.agent_id')
+                ->selectRaw('SUM(add_sales.sale_value) as sales_value')
+                ->where('status', 'Approved')
+                ->get();
+            if(!empty($earnings)){
+                foreach($earnings as $e){
+                    $earn = $e->sales_value;
+                }
+            }
+        }elseif(Auth::user()->role_id == 2){
+            //Total Earnings 
+            // $earnings = DB::table('add_sales')
+            //     ->join('products', 'add_sales.product_id', '=', 'products.id')
+            //     ->join('users', 'add_sales.agent', '=', 'users.agent_id')
+            //     ->join('supervisor', 'users.id', '=', 'supervisor.id')
+            //     ->selectRaw('SUM(add_sales.sale_value) as sales_value')
+            //     ->where([['status', 'Approved'], ['supervisor.id', Auth::user()->id]])
+            //     ->get();
+            $earnings = DB::table('add_sales')
             ->join('products', 'add_sales.product_id', '=', 'products.id')
             ->join('users', 'add_sales.agent', '=', 'users.agent_id')
+            ->join('agents', 'agents.id', '=', 'users.agent_id')
+            ->join('supervisor', 'supervisor.user_id', '=', 'agents.supervisor_id')
             ->selectRaw('SUM(add_sales.sale_value) as sales_value')
-            ->where('status', 'Approved')
+            ->where([['status', 'Approved'], ['agents.supervisor_id', Auth::user()->id]])
+            ->whereYear('date', $year)
             ->get();
-        foreach($earnings as $e){
-            $earn = $e->sales_value;
+
+            if(!empty($earnings)){
+                foreach($earnings as $e){
+                    $earn = $e->sales_value;
+                }
+            }
+
+        }elseif(Auth::user()->role_id == 3){
+            //Total Earnings 
+            $earnings = DB::table('add_sales')
+                ->join('products', 'add_sales.product_id', '=', 'products.id')
+                ->join('users', 'add_sales.agent', '=', 'users.agent_id')
+                ->join('agents', 'users.agent_id', '=', 'agents.id')
+                ->selectRaw('SUM(add_sales.sale_value) as sales_value')
+                ->where([['status', 'Approved'], ['agents.id', Auth::user()->agent_id]])
+                ->get();
+            if(!empty($earnings)){
+                foreach($earnings as $e){
+                    $earn = $e->sales_value;
+                }
+            }
+
+        }else{
+            $earn = 0;
+
         }
         
         //Total Agents 
@@ -193,12 +255,26 @@ class HomeController extends Controller
             $sales = 0;
         }
 
-        $role = DB::table('roles')->select('id')->where('name','agent')->first();    
-        $target = User::
+        $role = DB::table('roles')->select('id')->where('name','agent')->first();  
+        if(Auth::user()->role_id == 1){
+            $target = User::
           where('role_id',$role->id)
         ->where('company_id',Auth::user()->company_id)
         ->with('sales','target')->get();
-        //dd($target);
+    }elseif(Auth::user()->role_id == 2){
+        $target = agents_migration::
+                  join('users', 'users.agent_id', '=', 'agents.id')
+                  ->join('add_sales', 'add_sales.agent', '=', 'agents.id')
+                  ->join('agent_target', 'agents.id', '=', 'agent_target.user_id')
+                  ->select('users.name', 'agent_target.target', DB::raw('sum(add_sales.sale_value) as sales'))
+                  ->where([['agents.supervisor_id', Auth::user()->id], ['agent_target.date', '>=', Carbon\Carbon::now()->toDateString()]])
+                  ->groupBy('users.name', 'agent_target.target', 'agent_target.date')
+                  ->orderBy('agent_target.date', 'DESC')
+                  ->get();
+        
+    }  else{
+        $target = 0;
+    }
 
         $sum = 0;
 
@@ -225,48 +301,43 @@ class HomeController extends Controller
         return view('dashboard.content', ['comm' => $comm, 'agents' => $agents, 'earnings' => $earn, 'mo' => $mo, 'tday' => $tday, 'sales' => $sales, 'ag' => $ag, 'target' => $target, 'agent_target' => $agent_target, 'sum' => $sum, 'get_sales' => $get_sales, 'funded' => $funded]);
     }
 
-    public function getSalesByMonth(){
+     public function getSalesByMonth(){
         $month_sales = array();
         $month_name = array();
         $year = date('Y');
+
+/*        $monthly_chart = DB::table('add_sales')
+            ->join('products', 'add_sales.product_id', '=', 'products.id')
+            ->join('users', 'add_sales.agent', '=', 'users.agent_id')
+            ->select(DB::raw('MONTH(DATE) as month, SUM(add_sales.sale_value) as sales'))
+            ->groupBy(DB::raw('MONTH(DATE)'))
+            ->where('status', 'Approved')
+            ->orderBy(DB::raw('MONTH(DATE)', 'DESC'))
+            ->get();*/
+
+        $admin_role = DB::table('roles')->where('name','admin')->first();
+        $supervisor_role = DB::table('roles')->where('name','supervisor')->first();
+        $agent_role = DB::table('roles')->where('name','agent')->first();        
+        if(Auth::user()->role_id==$admin_role->id){
 
         for($i=0;$i<12;$i++){
             $m = $i+1;
              $month_s = date('Y').'-'.$m.'-01';
              $month_e = date('Y').'-'.$m.'-31';
         
-        if(Auth::user()->role_id == 1)
-            $monthly_chart = DB::table('add_sales')
-            ->whereBetween('date',[$month_s,$month_e])
-            ->where('status', 'Approved')
-            ->select('sale_value')
-            ->join('products', 'add_sales.product_id', '=', 'products.id')
-            ->join('users', 'add_sales.agent', '=', 'users.agent_id')        
-            ->get();
-        elseif(Auth::user()->role_id == 2){
+        $monthly_chart = DB::table('add_sales')
+        ->whereBetween('date',[$month_s,$month_e])
+        ->where('status', 'Approved')
+        ->select('sale_value')
+        ->join('products', 'add_sales.product_id', '=', 'products.id')
+        ->join('users', 'add_sales.agent', '=', 'users.agent_id')        
+        ->get();
 
-            $monthly_chart = DB::table('add_sales')
-            ->whereBetween('date',[$month_s,$month_e])
-            ->where('status', 'Approved')
-            ->select('sale_value')
-            ->join('products', 'add_sales.product_id', '=', 'products.id')
-            ->join('users', 'add_sales.agent', '=', 'users.agent_id')  
-            ->join('supervisor', 'users.id', '=', 'supervisor.user_id') 
-            ->where('users')     
-            ->get();
-        }elseif(Auth::user()->role_id == 3){
-            $monthly_chart = DB::table('add_sales')
-            ->whereBetween('date',[$month_s,$month_e])
-            ->where('status', 'Approved')
-            ->select('sale_value')
-            ->join('products', 'add_sales.product_id', '=', 'products.id')
-            ->join('users', 'add_sales.agent', '=', 'users.agent_id')  
-            ->join('agents', 'agents.id', '=', 'users.agent_id') 
-            ->where('agents.id', Auth::user()->agent_id)     
-            ->get();
-        }else{
-            $monthly_chart == 0;
-        }
+/*        $monthly_chart = AgentSales::whereBetween('date',[$month_s,$month_e])
+        ->where('status', 'Approved')
+        ->with('product')
+        ->get();        */
+
         $sales = 0;
         if($monthly_chart->count()>0){
             foreach($monthly_chart as $m){
@@ -278,23 +349,86 @@ class HomeController extends Controller
         }
 
         }
+
+
+
+    }elseif(Auth::user()->role_id==$supervisor_role->id){
+
+        for($i=0;$i<12;$i++){
+            $m = $i+1;
+             $month_s = date('Y').'-'.$m.'-01';
+             $month_e = date('Y').'-'.$m.'-31';
+        
+        $monthly_chart = DB::table('add_sales')
+        ->whereBetween('date',[$month_s,$month_e])
+        ->where('status', 'Approved')
+        ->select('sale_value')
+        ->join('products', 'add_sales.product_id', '=', 'products.id')
+        ->join('agents', 'add_sales.agent', '=', 'agents.id')
+        ->where('agents.supervisor_id',Auth::user()->id)
+        ->get();
+
+/*        $monthly_chart = AgentSales::whereBetween('date',[$month_s,$month_e])
+        ->where('status', 'Approved')
+        ->with('product')
+        ->get();        */
+
+        $sales = 0;
+        if($monthly_chart->count()>0){
+            foreach($monthly_chart as $m){
+                $sales = $sales + $m->sale_value;
+            }
+            $month_sales[$i] = $sales;
+        }else{
+            $month_sales[$i] = 0;
+        }
+
+        }
+
+
+
+
+    }elseif(Auth::user()->role_id==$agent_role->id){
+
+        for($i=0;$i<12;$i++){
+            $m = $i+1;
+             $month_s = date('Y').'-'.$m.'-01';
+             $month_e = date('Y').'-'.$m.'-31';
+        
+        $monthly_chart = DB::table('add_sales')
+        ->whereBetween('date',[$month_s,$month_e])
+        ->where('status', 'Approved')
+        ->select('sale_value')
+        ->join('products', 'add_sales.product_id', '=', 'products.id')
+        ->where('add_sales.agent',Auth::user()->agent_id)
+        ->get();
+
+/*        $monthly_chart = AgentSales::whereBetween('date',[$month_s,$month_e])
+        ->where('status', 'Approved')
+        ->with('product')
+        ->get();        */
+
+        $sales = 0;
+        if($monthly_chart->count()>0){
+            foreach($monthly_chart as $m){
+                $sales = $sales + $m->sale_value;
+            }
+            $month_sales[$i] = $sales;
+        }else{
+            $month_sales[$i] = 0;
+        }
+
+        }
+
+    }    
+
+
         
         for($i=0;$i<12;$i++){
             $m = $i+1;
             $month_name[$i] = date("F", mktime(0, 0, 0, $m, 10));        
         }         
 
-/*        foreach($monthly_chart as $m){
-
-            $month[] = $m->month;            
-        }
-        foreach($month as $mon)
-                $name[] = date("F", mktime(0, 0, 0, $mon, 10));
-
-        foreach($monthly_chart as $s){
-            $sales[] = $s->sales;
-        }
-*/
 
         $data = array_merge([$month_name], [$month_sales]);
       return response()->json(['monthly' => $data]);
@@ -305,7 +439,14 @@ class HomeController extends Controller
         $year = date('Y');
         $yearly_sales = array();
         $years = array();
-        for($i=2018;$i<=$year;$i++){
+        $admin_role = DB::table('roles')->where('name','admin')->first();
+        $supervisor_role = DB::table('roles')->where('name','supervisor')->first();
+        $agent_role = DB::table('roles')->where('name','agent')->first();        
+
+
+        if(Auth::user()->role_id==$admin_role->id){
+
+                    for($i=2018;$i<=$year;$i++){
              $month_s = $i.'-01-01';
              $month_e = $i.'-12-31';
         
@@ -329,6 +470,65 @@ class HomeController extends Controller
 
         array_push($years,$i);
         }
+
+        }elseif(Auth::user()->role_id==$supervisor_role->id){
+
+        for($i=2018;$i<=$year;$i++){
+             $month_s = $i.'-01-01';
+             $month_e = $i.'-12-31';
+        
+        $monthly_chart = DB::table('add_sales')
+        ->whereBetween('date',[$month_s,$month_e])
+        ->where('status', 'Approved')
+        ->select('sale_value')
+        ->join('products', 'add_sales.product_id', '=', 'products.id')
+        ->join('agents', 'add_sales.agent', '=', 'agents.id')
+        ->where('agents.supervisor_id',Auth::user()->id)
+        ->get();
+        
+        $sales = 0;
+        if($monthly_chart->count()>0){
+            foreach($monthly_chart as $m){
+                $sales = $sales + $m->sale_value;
+            }
+            array_push($yearly_sales,$sales);
+        }else{
+            array_push($yearly_sales,0);
+        }
+
+        array_push($years,$i);
+        }
+
+        }elseif(Auth::user()->role_id==$agent_role->id){
+
+        for($i=2018;$i<=$year;$i++){
+             $month_s = $i.'-01-01';
+             $month_e = $i.'-12-31';
+        
+        $monthly_chart = DB::table('add_sales')
+        ->whereBetween('date',[$month_s,$month_e])
+        ->where('status', 'Approved')
+        ->select('sale_value')
+        ->join('products', 'add_sales.product_id', '=', 'products.id')
+        ->where('add_sales.agent',Auth::user()->agent_id)
+        ->get();
+        
+        $sales = 0;
+        if($monthly_chart->count()>0){
+            foreach($monthly_chart as $m){
+                $sales = $sales + $m->sale_value;
+            }
+            array_push($yearly_sales,$sales);
+        }else{
+            array_push($yearly_sales,0);
+        }
+
+        array_push($years,$i);
+        }
+
+        }
+
+
                     
 
       $data = array_merge([$years], [$yearly_sales]);

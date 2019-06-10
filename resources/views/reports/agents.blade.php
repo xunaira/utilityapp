@@ -22,7 +22,7 @@
                             <div class="table-data__tool-right">
                                 <a href="{{url('admin/reports/agent-export')}}" class="d-inline float-right">  
                                     <button class="au-btn au-btn-icon au-btn--blue au-btn--small">
-                                      Download Excel
+                                      <i class="zmdi zmdi-download text-light zmdi-hc-2x mt-3"></i>  
                                     </button>                  
                                                        
                                   </a>

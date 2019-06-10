@@ -241,11 +241,19 @@ class UserController extends Controller
     }
 
     public function add_balance(){
-        $agents = DB::table('users')
-            ->join('agents', 'users.agent_id', '=', 'agents.id')
-            ->select('users.name', 'agents.id')
-            ->where('users.company_id', Auth::user()->company_id)
-            ->get();
+        if(Auth::user()->role_id == 1){
+            $agents = DB::table('users')
+                ->join('agents', 'users.agent_id', '=', 'agents.id')
+                ->select('users.name', 'agents.id')
+                ->where('users.company_id', Auth::user()->company_id)
+                ->get();
+        }elseif(Auth::user()->role_id == 2){
+            $agents = DB::table('users')
+                ->join('agents', 'users.agent_id', '=', 'agents.id')
+                ->select('users.name', 'agents.id')
+                ->where([['users.company_id', Auth::user()->company_id], ['agents.supervisor_id', Auth::user()->id]])
+                ->get();
+        }
         return view('users.add-balance', ['agents' => $agents]);
     }
 

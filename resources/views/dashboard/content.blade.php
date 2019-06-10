@@ -16,11 +16,15 @@
                             <i class="zmdi zmdi-accounts-add zmdi-hc-2x mt-2"></i>
                         </button>
                     </a>
+                    @endif
+                    @if(Auth::user()->role_id == 1)
                     <a href="{{url('/admin/users/add')}}" target="_blank" class="float-right d-inline">
                         <button class="au-btn au-btn-icon au-btn--blue au-btn--small float-right d-inline mr-3" data-toggle="tooltip" data-placement="top" data-original-title="Add Supervisor">
                             <i class="zmdi zmdi-account-add zmdi-hc-2x mt-2"></i>
                         </button>
                     </a>
+
+
                     @endif
                     <a href="{{url('admin/agent-sales/add')}}" target="_blank" class="float-right d-inline">
                         <button class="au-btn au-btn-icon au-btn--blue2 au-btn--small float-right d-inline mr-3" data-toggle="tooltip" data-placement="top" data-original-title="Add Sale">
@@ -127,9 +131,14 @@
                             <div class="au-skill-container">
                                 <div class="au-progress">  
                                     <?php 
-                                        $total = $agent_target->target->target;
-                                        $s = $sum;
-                                        $p = ($s / $total) * 100;
+                                        if(!$agent_target->target == 0){
+                                            $total = $agent_target->target->target;
+                                            $s = $sum;
+                                            $p = ($s / $total) * 100;
+                                        }else{
+                                            $p = 0;
+                                        }
+                                        
                                     ?>               
                                     <span class="au-progress__title">Target Progress</span>
                                     <div class="progress mb-3" style="height: 15px;">
@@ -147,12 +156,13 @@
                                 <div class="table-responsive">
                                     <table class="table table-top-countries">
                                         <tbody>
+                                            @foreach($get_sales as $g)
                                             <tr>
-                                                @foreach($get_sales as $g)
-                                                    <td>{{$g->product_name}}</td>
-                                                    <td class="text-right">&#8358; {{$g->sale_value}}</td>
-                                                @endforeach
+                                                <td>{{$g->product_name}}</td>
+                                                <td class="text-right">&#8358; {{$g->sale_value}}</td>
+                                               
                                             </tr>
+                                             @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -208,7 +218,7 @@
                         </button>
                     @endif
                 </div>
-                @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
+                @if(Auth::user()->role_id == 1)
                 <div class="col-md-6">
                     <!-- TASK PROGRESS-->
                     <div class="task-progress">
@@ -235,6 +245,56 @@
                                             }else{
                                                 $percent = 0;                                        
                                             }
+
+
+                                             ?>
+                                            <div class="progress mb-3" style="height: 15px;">
+                                                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: {{$percent}}%" aria-valuenow="{{$percent}}" aria-valuemin="0" aria-valuemax="{{$t->target}}">{{$percent}}%</div>
+                                            </div>
+                                    </div>
+                                </div>
+
+                            @endforeach
+                        </div>
+                        
+                    <!-- END TASK PROGRESS-->
+                    </div>
+                </div>
+                @elseif(Auth::user()->role_id == 2)
+                <div class="col-md-6">
+                    <!-- TASK PROGRESS-->
+                    <div class="task-progress">
+                        <h3 class="title-5 m-b-35">Agent Progress</h3>
+                        <div class="au-skill-container">
+                            @foreach($target as $t)
+
+                                <div class="au-progress">                                
+                                    <span class="au-progress__title">{{$t->name}}</span>
+                                    <div style="height: 5px;">
+                                            <?php 
+                                                $sale = 0;
+
+                                                if(!empty($t->sales)){
+                                                    
+                                                    foreach($t->sales as $s){
+                                                        $sale += $s->sale_value; 
+                                                    }
+                                                }
+
+                                                dd($sale);
+                                                if(!empty($t->target)){
+                                                    $target = $t->target;                        
+                                                }else{
+                                                    $target = 0;
+                                                }    
+                                                if($target != 0){
+                                                    $percent = ($sale / $target) * 100;
+
+                                                }else{
+                                                    $percent = 0;                                        
+                                                }
+
+                                                dd($percent);
 
 
                                              ?>

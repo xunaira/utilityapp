@@ -9,6 +9,9 @@ use Carbon\Carbon;
 use App\Wallet;
 use App\Balance;
 use Auth;
+use App\User;
+use App\Admin;
+use App\Supervisor;
 
 class SettingsController extends Controller
 {
@@ -160,5 +163,80 @@ class SettingsController extends Controller
             return back()->with('error','Balance Not Deleted');
         }
 
+    }
+
+    public function profile(){
+        $id = Auth::user()->id;
+        if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2){
+            $user = User::where('users.id', $id)
+                    ->join('admin', 'users.id', '=', 'admin.user_id')
+                    ->first();
+
+
+        }elseif(Auth::user()->role_id == 3){
+            $user = User::where('id', $id)
+                    ->join('agents', 'agents.id', '=', 'users.agent_id')
+                    ->select('users.name', 'users.username', 'agents.*')
+                    ->first();
+
+        }
+        
+        return view('settings.profile', ['user' => $user]);
+    }
+
+    public function update_profile(Request $request){
+        if(Auth::user()->role_id == 1){
+            $user = User::where('id', Auth::user()->id)->first();
+
+
+        }elseif(Auth::user()->role_id == 2){
+            $data = User::where('users.id', Auth::user()->id)->join('supervisor', 'supervisor.user_id', '=', 'users.id')->first();
+        }
+        elseif(Auth::user()->role_id == 3){
+            $user = User::where('agent_id', $request->get('id'))->first();
+            $data = agents_migration::find($request->get('id'));        
+        }
+
+        //dd($data);
+        
+        $user->name = $request->get('name');
+        $user->username = $request->get('username');
+
+        if($user->save()){
+            if(Auth::user()->role_id == 1){
+                $data = Admin::where('user_id', Auth::user()->id)->first();
+            }elseif(Auth::user()->role_id == 2){
+                $data = Supervisor::where('user_id', Auth::user()->id)->first();
+            }
+
+            $data->address1 = $request->get('address1');
+            $data->address2 = $request->get('address2');
+            $data->city = $request->get('city');
+            $data->state = $request->get('state');
+            $data->country = $request->get('country');
+            $data->phone_no = $request->get('phone_no');
+            
+            if(Auth::user()->role_id == 3){
+                $data->operational_area = $request->get('operational_area');
+            }
+
+            if($request->hasFile('pic')){
+                $img = $request->file('pic');
+                $thumb = 'pic-' . $request->get('name'). " " . time() . '.' . $img->getClientOriginalExtension();
+                $path = $img->storeAs('public/img/pic', $thumb);
+                $data->pic = $path;
+            }
+
+            if($data->save()){
+                return redirect("admin/settings/profile")->with(
+                        array('message' => 'Profile updated successfully.', 
+                              'alert-type' => 'success'));
+
+            }else{
+                 return redirect("admin/settings/profile")->with(array('message' => 'There was a problem updating this [profile]', 
+                          'alert-type' => 'error'));
+            }
+
+        }
     }
 }

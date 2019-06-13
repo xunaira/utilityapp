@@ -273,12 +273,14 @@ class UserController extends Controller
 
         if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2){
             $balance = Balance::where([['company_id', Auth::user()->company_id], ['date', Carbon::now()->toDateString()]])->select('total')->first();
-
-            if(empty($balance)){
-                return back()->with('error', "Please add system balance before adding money in wallet");
+            
+            if(empty($balance) || $balance == 'NULL'){
+                return back()->with(array('message' => 'Please add system balance before you fund agents wallet', 
+                                      'alert-type' => 'error'));
             }else{
                 $reports = Reports::where([['company_id', Auth::user()->company_id], ['date', Carbon::now()->toDateString()]])->orderBy('created_at', 'DESC')->select('remaining_balance as rem')->first(); 
-                if(empty($reports)){
+                
+                if(empty($reports) || $reports == 'NULL'){
                     if($total < $balance->total){
                         $wallet->cash_in_hand = $hand;
                         $wallet->cash_bank = $bank;

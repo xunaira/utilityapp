@@ -17,7 +17,7 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'admin'], function(){
 	Auth::routes();
-	Route::get('dashboard', 'HomeController@index');
+	Route::get('dashboard', 'DashboardController@index');
 	Route::get('logout', 'Auth\LoginController@logout');
 
 	Route::group(['prefix' => 'agents'], function(){
@@ -48,6 +48,19 @@ Route::group(['prefix' => 'admin'], function(){
 		Route::get('bankexport/{id}', 'UserController@bankexport');
 
 		Route::post('settarget', 'UserController@target');
+
+	});
+
+	Route::group(['prefix' => 'billing'], function(){
+		Route::get('/', 'BillingController@index');
+
+		Route::get('add', 'BillingController@add');
+		Route::post('create', 'BillingController@create');
+
+		Route::get('edit/{id}', 'BillingController@edit');
+		Route::post('update', 'BillingController@update');
+
+		Route::get('delete/{id}', 'BillingController@delete');
 
 	});
 
@@ -131,6 +144,10 @@ Route::group(['prefix' => 'admin'], function(){
 		Route::get('delete_balance/{id}', 'SettingsController@delete_balance');
 
 		Route::post('system', 'SettingsController@add_balance');
+
+		Route::get('profile', 'SettingsController@profile');
+
+		Route::post('profile', 'SettingsController@update_profile');
 	});
 
 	Route::group(['prefix' => 'reports'], function(){

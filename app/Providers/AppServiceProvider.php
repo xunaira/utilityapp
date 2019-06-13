@@ -10,6 +10,9 @@ use App\Reports;
 use View;
 use Carbon;
 use App\Transactions;
+use App\Admin;
+use App\Supervisor;
+use App\agents_migration;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -38,13 +41,20 @@ class AppServiceProvider extends ServiceProvider
         {
            
             if(Auth::user()){
-                if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2){
+                if(Auth::user()->role_id == 1){
                     $b = Balance::balance();
-                    $view->with('bal', $b);
-                }elseif(Auth::user()->role_id == 3){
+                    $pic = Admin::where('user_id', Auth::user()->id)->select('pic')->first();
+
+                    $view->with('bal', $b)->with('pic', $pic);
+                }elseif(Auth::user()->role_id == 2){
+                    $b = Balance::balance();
+                    $pic = Supervisor::where('user_id', Auth::user()->id)->select('pic')->first();
+                    $view->with('bal', $b)->with('pic', $pic);
+                }
+                elseif(Auth::user()->role_id == 3){
                     $w = Transactions::wallet_money();
-                    
-                    $view->with('bal', $w);
+                    $pic = agents_migration::where('user_id', Auth::user()->id)->select('pic')->first();
+                    $view->with('bal', $w)->with('pic', $pic);
                 }
                 
             }else{

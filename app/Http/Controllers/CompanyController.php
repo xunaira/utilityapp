@@ -63,10 +63,6 @@ class CompanyController extends Controller
                       'alert-type' => 'error'));
         	}
 		}
-
-
-
-
 	}
 
 	public function edit($id){

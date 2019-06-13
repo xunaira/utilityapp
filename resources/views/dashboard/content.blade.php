@@ -225,14 +225,17 @@
                         <h3 class="title-5 m-b-35">Agent Progress</h3>
                         <div class="au-skill-container">
                             @foreach($target as $t)
+
                                 <div class="au-progress">                                
                                     <span class="au-progress__title">{{$t->name}}</span>
                                     <div style="height: 5px;">
-                                            <?php 
+                                        <?php 
                                                 $sale = 0;
                                                 if(!empty($t->sales)){
-                                                    foreach($t->sales as $s){
-                                                        $sale += $s->sale_value; 
+                                                   
+                                                    foreach($t as $s){
+                                                        
+                                                        $sale += $s; 
                                                     }
                                                 }
                                                 if(!empty($t->target)){
@@ -248,7 +251,7 @@
 
 
                                              ?>
-                                            <div class="progress mb-3" style="height: 15px;">
+                                             <div class="progress mb-3" style="height: 15px;">
                                                 <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: {{$percent}}%" aria-valuenow="{{$percent}}" aria-valuemin="0" aria-valuemax="{{$t->target}}">{{$percent}}%</div>
                                             </div>
                                     </div>
@@ -276,7 +279,7 @@
 
                                                 if(!empty($t->sales)){
                                                     
-                                                    foreach($t->sales as $s){
+                                                    foreach($t as $s){
                                                         $sale += $s->sale_value; 
                                                     }
                                                 }
@@ -338,6 +341,7 @@
         </div>
     </section>
     <!-- END DATA TABLE-->
+
     @if(Auth::user()->role_id == 1)
         <section>
             <div class="container">
@@ -373,10 +377,10 @@
                                 <div class="table-responsive">
                                     <table class="table table-top-countries">
                                         <tbody>
-                                            @foreach($funded as $g)
+                                            @foreach($fund as $g)
                                             <tr>
                                                 <td>{{$g->comm}}</td>
-                                                <td class="text-right">&#8358; {{$g->value}}</td>                              
+                                                <td class="text-right">&#8358; {{$g->value}}</td>                      
                                             </tr>
                                             @endforeach
                                         </tbody>
